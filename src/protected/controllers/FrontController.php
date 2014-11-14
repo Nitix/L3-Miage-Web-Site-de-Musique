@@ -32,8 +32,9 @@ class FrontController
      */
     public function init()
     {
-        if (array_key_exists($_GET['c'], $this->controllers)) {
-            $this->callAction($_GET['c'], $this->getAction());
+        $controller = isset($_GET['c']) ? $_GET['c'] : 'index';
+        if (array_key_exists($controller, $this->controllers)) {
+            $this->callAction($controller, $this->getAction());
         } else {
             $this->callAction(FrontController::DEFAULT_CONTROLLER);
         }
@@ -45,8 +46,9 @@ class FrontController
      * @param String $controller the controller to call
      * @param String $action the action to call
      * @param array $args arguments to give to the action
+     * @param bool $failSafe Display a fatal error when set at false and when an error occur
      */
-    public function callAction($controller, $action = null, array $args = null)
+    public function callAction($controller, $action = null, array $args = null, $failSafe = true)
     {
         if (class_exists($controller, true)) {
             $instance = new $controller();
@@ -73,10 +75,14 @@ class FrontController
                     }
                 }
             } else {
-                $this->displayFatalError("Class " . $controller . " does not implement Controller !");
+                $this->displayFatalError("Class " . $controller . " does not implement Controller!");
             }
         } else {
-            $this->displayError(404, FrontController::DEFAULT_CONTROLLER, 'displayError', array('code' => '404'));
+            if ($failSafe) {
+                $this->displayError(404, FrontController::DEFAULT_CONTROLLER, 'displayError', array('code' => '404'));
+            } else {
+                $this->displayFatalError("Class " . $controller . " does not exist!");
+            }
         }
     }
 
@@ -92,10 +98,10 @@ class FrontController
         switch ($errorNumber) {
             case 404 :
                 header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
-                $this->callAction($controller, $action, $args);
+                $this->callAction($controller, $action, $args, false);
                 break;
             default:
-                $this->callAction($controller, $action, $args);
+                $this->callAction($controller, $action, $args, false);
                 break;
         }
     }
