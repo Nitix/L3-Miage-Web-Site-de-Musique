@@ -3,9 +3,7 @@
 namespace Controllers;
 
 /**
- * Interface Controller
- *
- * This interface
+ * This interface define all the basics action that must implements Controllers
  */
 interface Controller
 {

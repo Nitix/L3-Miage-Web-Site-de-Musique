@@ -3,9 +3,7 @@
 namespace Controllers;
 
 /**
- * Class FrontController
- *
- * Front Controller, fetch the correct Controller and call the action, it also verify the access right
+ * Fetch the correct Controller and call the action, it also verify the access right
  */
 class FrontController
 {
@@ -89,7 +87,7 @@ class FrontController
 
     /**
      * Create HTTP error page
-     * @param int $errorNumber http
+     * @param int $errorNumber number error of the http protocol
      * @param String $controller Controller to fallback
      * @param String $action action to call
      * @param array $args arguments to give to the action
