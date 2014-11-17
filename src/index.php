@@ -1,8 +1,8 @@
 <?php
 
-include "protected/controllers/FrontController.php";
+include_once "protected/common.php";
 
 //Initiate the front controlleur
 
-$front = new FrontController();
+$front = new \Controllers\FrontController();
 $front->init();
