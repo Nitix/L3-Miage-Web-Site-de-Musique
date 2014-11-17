@@ -1,6 +1,6 @@
 <?php
 
-include "Controller.php";
+namespace Controllers;
 
 /**
  * Class FrontController
@@ -13,11 +13,11 @@ class FrontController
     /**
      * Default Controller to be called when the controller does not exist
      */
-    const DEFAULT_CONTROLLER = 'IndexController'; //TODO TO be changed
+    const DEFAULT_CONTROLLER = 'DefaultController'; //TODO TO be changed
 
     /**
      * Indicates with controllers exists used to route querys
-     * @var array list of Controllers (routes)
+     * @var array list of controllers (routes)
      */
     private $controllers = array(
         'index' => FrontController::DEFAULT_CONTROLLER,
@@ -34,7 +34,7 @@ class FrontController
     {
         $controller = isset($_GET['c']) ? $_GET['c'] : 'index';
         if (array_key_exists($controller, $this->controllers)) {
-            $this->callAction($controller, $this->getAction());
+            $this->callAction($this->controllers[$controller], $this->getAction());
         } else {
             $this->callAction(FrontController::DEFAULT_CONTROLLER);
         }
@@ -50,8 +50,9 @@ class FrontController
      */
     public function callAction($controller, $action = null, array $args = null, $failSafe = true)
     {
-        if (class_exists($controller, true)) {
-            $instance = new $controller();
+        $className = '\Controllers\\' . $controller;
+        if (class_exists($className, true)) {
+            $instance = new $className();
             if ($instance instanceof Controller) {  //Controller must implements interface Controller
                 if ($action != null && !empty($action)) { //Check if action exist
                     if ($instance->hasAction($action)) {
@@ -69,7 +70,7 @@ class FrontController
                     }
                 } else {
                     if ($instance->hasRightAccess("index")) {
-                        $instance->$action($instance->index());
+                        $instance->index();
                     } else {
                         $instance->accessDenied();
                     }
