@@ -17,8 +17,9 @@ class BaseController implements Controller
     
     public function autocomplete()
     {
-        $connexion = mysql_connect("romainpapelier.fr.mysql","romainpapelier_","ixktis");
-        $bdd = mysql_select_db("romainpapelier_", $connexion);
+        $connexion = ConnexionGiver::getConnexion();
+        $bdd = ConnexionGiver::getDatabase();
+        
         $query = "select nom from ( select title as 'nom' from tracks where title like '%" . $_GET["term"] . 
         "%' union select name as 'nom' from artists where name like '%" . $_GET["term"] . "%' ) as temp order by nom limit 5";
         $request = mysql_query($query);

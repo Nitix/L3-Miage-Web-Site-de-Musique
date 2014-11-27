@@ -54,6 +54,15 @@ class DefaultView
 	        $('#recherche').autocomplete({
             	source : 'index.php?c=base&a=autocomplete'
             });
+
+            /*
+            $.ajax({
+                url: 'index.php?c=base&a=autocomplete&term=a',
+                success: function(data){
+                    console.log(data);
+                }
+            });
+            */
             
             $("#btnRecherche").click(function(){
                 console.log("aaaa");
