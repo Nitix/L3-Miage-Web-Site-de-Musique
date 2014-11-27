@@ -120,6 +120,6 @@ class FrontController
      */
     private function getAction()
     {
-        return isset($_GET['a']) ? $_GET['a'] : isset($_POST['a']) ? $_POST['a'] : null;
+        return isset($_GET['a']) ? $_GET['a'] : ( isset($_POST['a']) ? $_POST['a'] : null );
     }
 } 
