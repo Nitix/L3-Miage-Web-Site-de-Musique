@@ -1,27 +1,3 @@
-<?php
-
-
-//FIXME A faire au propre, en séparant les différentes parties
-namespace Views;
-
-class DefaultView
-{
-
-    public function DefaultView()
-    {
-
-    }
-
-    public function display()
-    {
-        
-    }
-} 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -52,7 +28,7 @@ class DefaultView
         <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 	    <script>
 	        $('#recherche').autocomplete({
-            	source : 'index.php?c=base&a=autocomplete'
+            	source : 'protected/Controllers/DefaultController.php?a=autocomplete'
             });
             
             $("#btnRecherche").click(function(){
