@@ -6,7 +6,8 @@ class DefaultController implements Controller
 {
 
     private static $actions = array(
-        'index'
+        'index',
+        'autocomplete'
     );
 
     public function index()
