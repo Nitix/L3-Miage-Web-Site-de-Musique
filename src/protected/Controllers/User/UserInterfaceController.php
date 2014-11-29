@@ -6,6 +6,7 @@ namespace Controllers\User;
 
 use Controllers\ActionNotFoundException;
 use Controllers\Controller;
+use Models\User;
 
 /**
  * Control the interaction with the user
