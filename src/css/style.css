@@ -53,10 +53,31 @@ nav{
     height: 35px;
 }
 
+.trackList > li{
+    transition: background 0.2s;
+    background-color: #242424;
+    height: 24px;
+    margin: 2px;
+    padding-left: 15px;
+    list-style:none;
+    padding-top: 2px;
+    padding-right: 15px;
+}
+
+.trackList > li:hover{
+    transition: background 0.2s;
+    background-color: #2E2E2E;
+    
+}
+
+.trackList > li > .iconBtn {
+    float: right;
+}
 
 #mainDiv{
-    text-align: center;
-	
+   
+	padding-left: 20px;
+	padding-right: 20px;
     border: solid;
     border-color: rgba(0,0,0,0);
     position : absolute;
@@ -184,3 +205,37 @@ left: 0;
     -o-transition: all 0.3s;
     transition: all 0.3s;
 }*/
+
+/*********************************** CSS pour la scrollbar **********************************************/
+
+::-webkit-scrollbar {
+    width: 10px;
+    
+}
+
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment {
+    display: block;
+    height: 10px;
+}
+
+::-webkit-scrollbar-button:vertical:increment {
+    background-color: rgba(0,0,0,0);
+}
+
+::-webkit-scrollbar-track-piece {
+    background-color: #242424;
+    -webkit-border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    height: calc(10%+10px);
+    background-color: gray;
+    -webkit-border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    width: 50px;
+    background-color: rgba(0,0,0,0);
+    -webkit-border-radius: 3px;
+}

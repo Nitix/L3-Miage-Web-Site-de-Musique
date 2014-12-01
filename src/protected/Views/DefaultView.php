@@ -42,13 +42,13 @@ class DefaultView
 <body>
 
     <header>
-    <h1> banniere/nom du site </h1>
+    <h1> 10H </h1>(lolilol)
     </header>
 
     <nav>
         
             <input value="" type="text" id="recherche"/>
-            <img src="css/loupe.png " alt="loupe" class="iconBtn"/>
+            <img src="css/icons/search.png " alt="loupe" class="iconBtn" id="btnRecherche"/>
             
             
             
@@ -59,8 +59,9 @@ class DefaultView
             
             <div class="toolbarSeparator"></div>
             
-            <img src="css/reglage.png" id="reglages" alt="reglages" class="toolbarBtn iconBtn"/>
-            <img src = "css/favoris.png" id ="favoris" alt = "favoris" class="toolbarBtn iconBtn"/> 
+            <img src="css/icons/gear.png" id="reglages" alt="reglages" class="toolbarBtn iconBtn"/>
+            <img src = "css/icons/playlist.png" id ="playlists" alt = "playlists" class="toolbarBtn iconBtn"/> 
+            <img src = "css/icons/fav.png" id ="favoris" alt = "favoris" class="toolbarBtn iconBtn"/> 
     </nav>
 
     <div id ="mainDiv">
