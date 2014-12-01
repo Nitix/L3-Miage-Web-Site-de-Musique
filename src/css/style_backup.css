@@ -1,0 +1,67 @@
+body
+{
+	
+	font-family : "Lucida Sans Unicode";
+	color : white;
+	background-image: url("./Background.jpg");
+}
+
+p{
+text-align: justify;
+}
+
+img
+{
+	border-style: solid;
+	border-width : 5px;
+	border-color: Orange;
+}
+
+a
+{
+	color: #D5A1FF;
+}
+
+a:hover
+{
+	color: orange;
+}
+
+a:visited
+{
+	color: orange;
+}
+
+.panel
+{
+	background-color: rgba(0,0,0,0.75);
+	border-radius: 10px;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+.article
+{
+	background-color: rgba(0,0,0,0.75);
+	border-radius: 10px;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+.music
+{
+	background-color: rgba(0,0,0,0.75);
+	border-radius: 10px;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+#error
+{
+    color: red;
+}
+
+#valid
+{
+    color: green;
+}

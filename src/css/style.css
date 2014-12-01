@@ -1,67 +1,186 @@
-body
-{
+
+/*delimitation des balises*/
+
+*:focus {
+    outline: 0;
+}
+
+html{
+    height: 100%;
+}
+
+body{
+    color: white;
+    display: block;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    margin: 0px;
+    
+
+
+    
+    background: url(music_equalizer-wallpaper-1920x1080.jpg) no-repeat center center fixed; 
+	 -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.bodyInsc{
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    background-image:url("degrade.png");
+}
+
+.bodyConx{
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    background-image: url("degrade.png");
+
+}
+header{
+	display: block;
+    text-align: center;
+    height: 100px;
+}
+nav{
+	display: block;
+    /*background: transparent;*/
+    background-image:linear-gradient(#2E2E2E, #242424);
+    /*border-color: gray;
+    border: solid ;
+    border-radius: 2px;*/
+    position :relative;
+    /*top: 35px;*/
+    /*padding:5px;*/
+    height: 35px;
+}
+
+
+#mainDiv{
+    text-align: center;
 	
-	font-family : "Lucida Sans Unicode";
-	color : white;
-	background-image: url("./Background.jpg");
+    border: solid;
+    border-color: rgba(0,0,0,0);
+    position : absolute;
+    background-color: rgba(10,10,10,0.95);
+    height: calc(100% - 252px);
+    margin-left:15%;
+    width:70%;
+    margin-right:15%;
+    overflow: auto;
+    
+    
 }
 
-p{
-text-align: justify;
+footer{
+    text-align: center;
+    
+    margin: 0px;
+    
+    background-image:linear-gradient(#2E2E2E, #242424);
+   
+    height:90px;
+    
+    width: calc(100%);
+
+position: absolute;
+bottom: 0;
+left: 0;
 }
 
-img
-{
-	border-style: solid;
-	border-width : 5px;
-	border-color: Orange;
+
+/*menu horizontal de la balise nav */
+
+#menu{
+    padding: 0;
+    margin: 0;
+    /* margin-left :800px;
+     margin-bottom: 0px;*/
 }
 
-a
-{
-	color: #D5A1FF;
+#menu li {
+    display: inline;
+    list-style: none;
 }
 
-a:hover
-{
-	color: orange;
+#recherche{
+
+    margin-left: 8%;
+    border-style: hidden;
+    border-radius: 50px;
+    height: 20px;
+    padding-left: 10px;
+    width: 20%;
+    margin-top: 6px;
 }
 
-a:visited
-{
-	color: orange;
+.iconBtn{
+    cursor: pointer;
+    width: 22px;
+	height: 22px;
+    margin-left: 6px;
+	vertical-align: middle;
+	
 }
 
-.panel
-{
-	background-color: rgba(0,0,0,0.75);
-	border-radius: 10px;
-	padding: 10px;
-	margin-bottom: 20px;
+/*pour tt les boutons de la tool bar*/
+.toolbarBtn {
+    cursor: pointer;
+    height: 22px;
+	vertical-align: middle;
+    background: transparent;
+    border:transparent;
+    color:white;
+    float: right;
+    margin-top: 6px;
 }
 
-.article
-{
-	background-color: rgba(0,0,0,0.75);
-	border-radius: 10px;
-	padding: 10px;
-	margin-bottom: 20px;
+.toolbarSeparator{
+    width: 20px;
+    float: right;
+    
+    height: 22px;
+    vertical-align: middle;
 }
 
-.music
-{
-	background-color: rgba(0,0,0,0.75);
-	border-radius: 10px;
-	padding: 10px;
-	margin-bottom: 20px;
+.inscription{
+    text-align: center;
+    width:400px;
+    height:240px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin:-100px 0 0 -200px;
 }
 
-#error
-{
-    color: red;
+/*connexion formulaire*/
+
+.connexion{
+    text-align: center;
+    width:400px;
+    height:200px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin:-100px 0 0 -200px;
+}
+#conx {/*pour centrer verticalement le formulaire de connexion*/
+  /*position: absolute;*/
+    top: 50%
 }
 
-#valid
-{
-    color: green;
-}
+
+
+
+/*spécifique au bouton "m'inscrire"*/
+/*
+#minscrire {
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    letter-spacing: 1px;
+   
+    display: inline-block;
+    margin: 3px 2px;
+    border-radius: 2px;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}*/

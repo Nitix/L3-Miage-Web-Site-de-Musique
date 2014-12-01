@@ -22,54 +22,59 @@ class DefaultView
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<title>Mon Site - Videos</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="css/style.css"/>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-	</head>
-	
-	<body>
-	
-		<h1>Recherche</h1>
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <link rel="stylesheet" href="css/style.css">
 
-		<div class="panel">
-			<form action="" method="POST">
-				<p>
-				<input type="text" id="recherche" name="recherche" size="25"/>
-				</p>
-			</form>
-			<button id="btnRecherche">Rechercher</button>
-		</div>
-		
-		<div id="main">
-		    
-		</div>
 
-        <script src="js/jquery-1.11.1.min.js"></script>
-        <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-	    <script>
-	        $('#recherche').autocomplete({
-            	source : 'index.php?c=base&a=autocomplete'
-            });
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Popup en CSS3 et JS pour le blog webdesignweb.fr" />
+    <meta name="keywords" content="modal, window, overlay, modern, box, css transition, css animation " />
+    <meta name="author" content="Stratis BAKAS" />
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic|Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 
-            /*
-            $.ajax({
-                url: 'index.php?c=base&a=autocomplete&term=a',
-                success: function(data){
-                    console.log(data);
-                }
-            });
-            */
+</head>
+<body>
+
+    <header>
+    <h1> banniere/nom du site </h1>
+    </header>
+
+    <nav>
+        
+            <input value="" type="text" id="recherche"/>
+            <img src="css/loupe.png " alt="loupe" class="iconBtn"/>
             
-            $("#btnRecherche").click(function(){
-                console.log("aaaa");
-                $("#main").empty();
-                $("#main").append('<img src="http://i0.kym-cdn.com/photos/images/newsfeed/000/103/740/Me%20Gusta.png?1318992465"></img><p>HAAAAAAA</p>');
-            });
             
-	    </script>
-	</body>
+            
+            
+            <button onclick="DivInscription()" class="toolbarBtn">Inscription</button>
+            <button onclick="DivConnexion()" class="toolbarBtn">Connexion</button>
+            <button onclick="profil()" class="toolbarBtn">User</button>
+            
+            <div class="toolbarSeparator"></div>
+            
+            <img src="css/reglage.png" id="reglages" alt="reglages" class="toolbarBtn iconBtn"/>
+            <img src = "css/favoris.png" id ="favoris" alt = "favoris" class="toolbarBtn iconBtn"/> 
+    </nav>
+
+    <div id ="mainDiv">
+        <p>ceci <br>est <br> la <br>div <br>principale </p>
+    </div>
+
+    <footer>
+        <p>ceci est le pied de page </p>
+    </footer>
+
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="js/recherche.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
 </html>
