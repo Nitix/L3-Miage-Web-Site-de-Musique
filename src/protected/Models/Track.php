@@ -1,0 +1,157 @@
+<?php
+
+
+namespace Models;
+
+use PDO;
+
+/**
+ * Represent a Track in the database
+ * @package Models
+ */
+class Track
+{
+
+    /**
+     * @var int Id of the track
+     */
+    private $track_id;
+
+    /**
+     * @var int Id of the artist
+     */
+    private $artist_id;
+
+    /**
+     * @var string title of the music
+     */
+    private $title;
+
+    /**
+     * @var string url of the music
+     */
+    private $mp3_url;
+
+    /**
+     * Return the artist Id ot the track
+     * @return mixed id of the artist
+     */
+    public function getArtistId()
+    {
+        return $this->artist_id;
+    }
+
+    /**
+     * Return the mp3 url of the track
+     * @return string mp3 url of the track
+     */
+    public function getMp3Url()
+    {
+        return $this->mp3_url;
+    }
+
+    /**
+     * Return the title of the track
+     * @return string title of the track
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Return the id of the track
+     * @return int if of the track
+     */
+    public function getTrackId()
+    {
+        return $this->track_id;
+    }
+
+    /**
+     * Retrieve all Tracks in the database
+     * @return Track[] List of tracks
+     * @throws \PDOException
+     */
+    public static function findAll()
+    {
+        $db = Base::getConnection();
+
+        $stmt = $db->prepare("SELECT * FROM tracks");
+        $stmt->execute();
+
+        $tab = array();
+        foreach ($stmt->fetchALL() as $trk) {
+            $t = new Track();
+
+            $t->track_id = $trk['track_id'];
+            $t->artist_id = $trk['artist_id'];
+            $t->title = $trk['title'];
+            $t->mp3_url = $trk['mp3_url'];
+
+            $tab[$trk['track_id']] = $t;
+        }
+        $stmt->closeCursor();
+        return $tab;
+    }
+
+    /**
+     * Retrieve an Track through his id.
+     * @param int $id Id of the track
+     * @return Track|null The track or null if not found
+     * @throws \PDOException
+     */
+    public static function findByTrackID($id)
+    {
+        $db = Base::getConnection();
+
+        $stmt = $db->prepare("SELECT * FROM tracks WHERE track_id=:id ;");
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute(array($id));
+
+        $response = $stmt->fetch();
+
+        if ($response) {
+            $t = new Track();
+            $t->track_id = $response['track_id'];
+            $t->artist_id = $response['artist_id'];
+            $t->title = $response['title'];
+            $t->mp3_url = $response['mp3_url'];
+
+            $stmt->closeCursor();
+            return $t;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Retrieve an Track through his title.
+     * @param string $title Title of the track
+     * @return Track|null The track or null if not found
+     * @throws \PDOException
+     */
+    public static function findByTitle($title)
+    {
+        $db = Base::getConnection();
+
+        $stmt = $db->prepare("SELECT * FROM tracks WHERE title=:title ;");
+        $stmt->bindParam(":title", $title, PDO::PARAM_INT);
+        $stmt->execute(array($title));
+
+        $response = $stmt->fetch();
+
+        if ($response) {
+            $t = new Track();
+            $t->track_id = $response['track_id'];
+            $t->artist_id = $response['artist_id'];
+            $t->title = $response['title'];
+            $t->mp3_url = $response['mp3_url'];
+
+            $stmt->closeCursor();
+            return $t;
+        } else {
+            return false;
+        }
+    }
+}
