@@ -11,6 +11,13 @@
             });
             */
             
+            //ajout de l'evenement pour lancer la recherche avec la touche Entree
+             $("#recherche").keydown(function(event){
+                 if(event.keyCode == 13){
+                     $("#btnRecherche").click();
+                 }
+             });
+            
             //ajout de l'évenement "quand on clique sur le bouton de recherche"
             $("#btnRecherche").click(function(){
         
@@ -53,7 +60,14 @@
                                         
                                         var favBtn = '<img src="css/icons/fav.png " id="addToFavs'+data.musiques[i].track_id+'" class="iconBtn" data-id="'+data.musiques[i].track_id+'" onclick="addToFavs('+data.musiques[i].track_id+')"/>';
                                         
-                                        $("#trackList").append('<li>'+data.musiques[i].title+favBtn+addToPlaylistBtn+playBtn+'</li>');
+                                        var artist = "";
+                                        
+                                        if(data.musiques[i].name != null)
+                                        {
+                                            artist = '<a class="trackList_artist" onclick="viewArtistPage('+data.musiques[i].artist_id+')">'+data.musiques[i].name+'</a>';
+                                        }
+                                        
+                                        $("#trackList").append('<li>'+data.musiques[i].title+artist+favBtn+addToPlaylistBtn+playBtn+'</li>');
                                     }
                                     
                                 }
@@ -72,7 +86,7 @@
                                 for(var i = 0; i < data.artistes.length; i++)
                                 {
                                     if(data.artistes[i].name != null)
-                                    $("#artistsList").append('<li>'+data.artistes[i].name+'</li>');
+                                    $("#artistsList").append('<li onclick="viewArtistPage('+data.artistes[i].artist_id+')"><img src="'+data.artistes[i].image_url+'"/><div class="artistsList_name">'+data.artistes[i].name+'</div></li>');
                                 }
                             }
                         }
@@ -81,6 +95,11 @@
                 
                 
             });
+            
+            function viewArtistPage(artist_id){
+                console.log("page de l'artiste : "+artist_id);
+                //ouvrir la page de l'artiste
+            }
             
             function lire(track_id){
                 console.log("lecture : "+track_id);

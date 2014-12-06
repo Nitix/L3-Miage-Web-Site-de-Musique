@@ -64,7 +64,37 @@ nav{
     padding-right: 15px;
 }
 
+.artistsList > li > img {
+    max-height: 90px;
+    margin-top: 5px;
+    margin-right: 10px;
+}
+
+.artistsList > li > .artistsList_name {
+    padding-bottom: 50px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.artistsList > li{
+    cursor: pointer;
+    transition: background 0.2s;
+    background-color: #242424;
+    height: 100px;
+    margin: 2px;
+    padding-left: 15px;
+    list-style:none;
+    padding-top: 2px;
+    padding-right: 15px;
+}
+
 .trackList > li:hover{
+    transition: background 0.2s;
+    background-color: #2E2E2E;
+    
+}
+
+.artistsList > li:hover{
     transition: background 0.2s;
     background-color: #2E2E2E;
     
@@ -72,6 +102,24 @@ nav{
 
 .trackList > li > .iconBtn {
     float: right;
+}
+
+.trackList > li > div {
+    display: inline-block;
+}
+
+
+.trackList > li > .trackList_artist {
+    transition: color 0.3s;
+    margin-left: 10px;
+    font-size: 14px;
+    color: gray;
+    cursor: pointer;
+}
+
+.trackList > li > .trackList_artist:hover {
+    color: #B1FF00;
+    transition: color 0.3s;
 }
 
 #mainDiv{
