@@ -14,8 +14,7 @@ body{
     display: block;
     font-family: 'Lato', Calibri, Arial, sans-serif;
     margin: 0px;
-    
-
+    height: 90%;
 
     
     background: url(music_equalizer-wallpaper-1920x1080.jpg) no-repeat center center fixed; 
@@ -62,6 +61,7 @@ nav{
     list-style:none;
     padding-top: 2px;
     padding-right: 15px;
+    
 }
 
 .artistsList > li > img {
@@ -86,6 +86,7 @@ nav{
     list-style:none;
     padding-top: 2px;
     padding-right: 15px;
+    overflow: hidden;
 }
 
 .trackList > li:hover{
@@ -100,24 +101,30 @@ nav{
     
 }
 
-.trackList > li > .iconBtn {
+.trackList > li > .trackActions {
     float: right;
 }
 
 .trackList > li > div {
-    display: inline-block;
+    display: inline;
 }
 
+.trackList > li > .trackInfos {
+    overflow: hidden;
+    height: 19px;
+}
 
-.trackList > li > .trackList_artist {
+.trackList > li > .trackInfos > .trackList_artist {
     transition: color 0.3s;
     margin-left: 10px;
     font-size: 14px;
     color: gray;
     cursor: pointer;
+    overflow: hidden;
+    height: 19px;
 }
 
-.trackList > li > .trackList_artist:hover {
+.trackList > li > .trackInfos > .trackList_artist:hover {
     color: #B1FF00;
     transition: color 0.3s;
 }
@@ -141,20 +148,125 @@ nav{
 
 footer{
     text-align: center;
-    
+    overflow: auto;
     margin: 0px;
     
-    background-image:linear-gradient(#2E2E2E, #242424);
-   
-    height:90px;
+    /*background-color: #2E2E2E;*/
+    
+    /*background-color: rgba(10,10,10,0.95);*/
+    /*display: inline-block;*/
     
     width: calc(100%);
-
+    height: auto;
 position: absolute;
 bottom: 0;
 left: 0;
 }
 
+#entetePlaylist{
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding-top: 5px;
+    background-color:#1A1A1A;
+    min-height: 25px;
+    width: calc(100%);
+    overflow: hidden;
+}
+
+#entetePlaylist > * {
+    float: left;
+}
+
+#entetePlaylistBtn {
+    margin-left: 7%;
+}
+
+#playlistInfos {
+    margin-left: 8%;
+}
+
+#entetePlaylist:hover{
+    transition: background-color 0.3s;
+    background-color: #242424;
+}
+
+#voletPlaylist{
+    margin-left:15%;
+    width: calc(70% + 3px);
+    margin-right: calc(15% - 3px);
+    padding-left: 20px;
+	padding-right: 20px;
+    height: 0px;
+    background-color: rgb(10,10,10);
+    overflow: auto;
+}
+
+#voletPlaylist > ul > li {
+   transition: background 0.2s;
+    background-color: #242424;
+    height: 24px;
+    margin: 2px;
+    padding-left: 15px;
+    list-style:none;
+    padding-top: 2px;
+    padding-right: 15px;
+}
+
+#voletPlaylist > ul > li:hover {
+     transition: background 0.2s;
+    background-color: #2E2E2E;
+}
+
+#audioPlayer {
+    background-color: #2E2E2E;
+    height:90px;
+}
+
+#playlistsPopup {
+    height: 50%;
+    width: 400px;
+    background-color: #0D0D0D;
+    position: absolute;
+    padding: 10px;
+}
+
+#playlistsPopup > .iconBtn {
+    float: right;
+}
+
+#userPlaylists{
+    overflow: auto;
+    display: block;
+    height: 90%;
+}
+
+#createPlaylistLi{
+    height: 30px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+#createPlaylistLi > .iconBtn{
+   
+    margin-right: 10px;
+    height: 22px;
+}
+
+#createPlaylistLi > input {
+    vertical-align : baseline;
+    margin-top: 3px;
+    display: inline-block;
+    background-color: rgba(0,0,0,0.0);
+    color: white;
+    border-color: rgba(0,0,0,0.0);
+    font-size: 14px;
+}
+
+#createPlaylistLi > p {
+    vertical-align: baseline;
+    margin-top: 3px;
+    display: inline-block;
+}
 
 /*menu horizontal de la balise nav */
 
@@ -209,6 +321,8 @@ left: 0;
     height: 22px;
     vertical-align: middle;
 }
+
+
 
 .inscription{
     text-align: center;
