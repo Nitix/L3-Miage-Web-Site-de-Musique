@@ -33,6 +33,42 @@ class Artist
     private $info;
 
     /**
+     * The id to set
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * The name of the artist
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Image of the artist
+     * @param string $image_url
+     */
+    public function setImageUrl($image_url)
+    {
+        $this->image_url = $image_url;
+    }
+
+    /**
+     * Information of the artist
+     * @param string $info
+     */
+    public function setInfo($info)
+    {
+        $this->info = $info;
+    }
+
+    /**
      * Return the id of the artist
      * @return int id of the artist
      */

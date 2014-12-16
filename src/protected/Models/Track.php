@@ -33,6 +33,11 @@ class Track
     private $mp3_url;
 
     /**
+     * @var Artist artist of the track
+     */
+    private $artist;
+
+    /**
      * Return the artist Id ot the track
      * @return mixed id of the artist
      */
@@ -67,6 +72,16 @@ class Track
     {
         return $this->track_id;
     }
+
+    /**
+     * Return the artist of the track
+     * @return null|Artist Artist or null
+     */
+    public function getArtist()
+    {
+        return $this->artist;
+    }
+
 
     /**
      * Retrieve all Tracks in the database
@@ -160,7 +175,7 @@ class Track
      * a specified sequence of characters.
      * @param string $name The specified sequence of characters.
      * @param int $limit the number of track to search
-     * @return Track[] array of all Artists which name's contains
+     * @return Track[] array of all Tracks which name's contains
      * a specified sequence of characters.
      * @throws \PDOException
      */
@@ -183,7 +198,47 @@ class Track
             $t->title = $response['title'];
             $t->mp3_url = $response['mp3_url'];
 
-            $stmt->closeCursor();
+            $tab[$response['track_id']] = $t;
+        }
+        $stmt->closeCursor();
+        return $tab;
+    }
+
+    /**
+     * Retrieves an array of all Artists which name's contains
+     * a specified sequence of characters.
+     * @param string $name The specified sequence of characters.
+     * @param int $limit the number of track to search
+     * @return Track[] array of all tracks which name's contains
+     * a specified sequence of characters, it give also artist
+     * @throws \PDOException
+     */
+    public static function findByNameLikeWithArtist($name, $limit = 20)
+    {
+        $db = Base::getConnection();
+
+        $stmt = $db->prepare("SELECT * FROM tracks INNER JOIN artists ON tracks.artist_id = artists.artist_id  WHERE title LIKE :like ORDER BY title LIMIT :limit");
+        $like = "%" . $name . "%";
+        $stmt->bindParam(":like", $like, PDO::PARAM_STR);
+        $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+
+        $tab = array();
+        foreach ($stmt->fetchALL() as $response) {
+            $t = new Track();
+            $t->track_id = $response['track_id'];
+            $t->artist_id = $response['artist_id'];
+            $t->title = $response['title'];
+            $t->mp3_url = $response['mp3_url'];
+
+            $a = new Artist();
+            $a->setId($response['artist_id']);
+            $a->setImageUrl($response['image_url']);
+            $a->setName($response['name']);
+            $a->setInfo($response['info']);
+
+            $t->artist = $a;
             $tab[$response['track_id']] = $t;
         }
         $stmt->closeCursor();

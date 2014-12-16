@@ -12,31 +12,29 @@ class BaseController implements Controller
         'test',
         'autocomplete'
     );
-    
+
     public function test()
     {
         echo "ceci est un test";
     }
-    
+
     public function autocomplete()
     {
-        try{
+        try {
             $array = array();
 
             $res = Track::findByNameLike($_GET["term"], 5);
-            foreach($res as $trackId => $track)
-            {
+            foreach ($res as $trackId => $track) {
                 $data = array(
                     'id' => $trackId,
                     'name' => $track->getTitle(),
                     'image' => $track->getArtistId()
-                    );
+                );
                 $array[] = array("category" => "Musique", "label" => $track->getTitle(), "data" => $data);
             }
 
             $res = Artist::findByNameLike($_GET["term"], 5);
-            foreach($res as $artistId => $artist)
-            {
+            foreach ($res as $artistId => $artist) {
                 $data = array(
                     'id' => $artistId,
                     'name' => $artist->getName(),
@@ -45,52 +43,41 @@ class BaseController implements Controller
                 $array[] = array("category" => "Artiste", "label" => $artist->getName(), "data" => $data);
             }
             echo json_encode($array);
-        }catch (\PDOException $e){
+        } catch (\PDOException $e) {
             echo json_encode(array("errors" => "databaseDown"));
         }
     }
-    
+
     public function recherche()
     {
-        //var_dump($_GET);
-        $connexion = ConnexionGiver::getConnexion();
-        $bdd = ConnexionGiver::getDatabase();
-        
-        $queryT = "select tracks.*, artists.name, artists.image_url from tracks inner join artists on tracks.artist_id = artists.artist_id where tracks.title like '%" . $_GET["q"] . "%' or artists.name like '%" . $_GET["q"] . "%' order by title";
-        $queryA = "select artists.* from artists where name like '%" . $_GET["q"] . "%' order by name";
-        
-        $requestT = mysql_query($queryT);
-        $resT = mysql_fetch_assoc($requestT);
-        
-        $requestA = mysql_query($queryA);
-        $resA = mysql_fetch_assoc($requestA);
-        
-        $arrayT = array();
-        $arrayA = array();
-        
-        while($resT != false)
-        {
-            array_push($arrayT, $resT);
-            $resT = mysql_fetch_assoc($requestT);
+
+        $data = array();
+        $tracks = Track::findByNameLikeWithArtist($_GET["q"]);
+        $data['musiques'] = array();
+        foreach ($tracks as $id => $track) {
+            $data['musiques'][$id] = array(
+                "track_id" => $track->getTrackId(),
+                "title" => $track->getTitle(),
+                "mp3_url" => $track->getMp3Url(),
+                "artist_id" => $track->getArtistId(),
+                "name" => $track->getArtist()->getName(),
+                "image_url" => $track->getArtist()->getImageUrl()
+            );
         }
-        
-        while($resA != false)
-        {
-            array_push($arrayA, $resA);
-            $resA = mysql_fetch_assoc($requestA);
+        $artists = Artist::findByNameLike($_GET["q"], 5);
+        foreach ($artists as $artistId => $artist) {
+            $data['artistes'][$artistId] = array(
+                'artist_id' => $artistId,
+                'name' => $artist->getName(),
+                'image_url' => $artist->getImageUrl()
+            );
         }
-        
-        $retour = array();
-        $retour["musiques"] = $arrayT;
-        $retour["artistes"] = $arrayA;
-        
-        
-        echo json_encode($retour);
+        echo json_encode($data);
     }
-    
+
     public function index()
     {
-        
+
     }
 
     public function hasAction($action)
