@@ -201,11 +201,17 @@ class Artist
     public static function findByNameLike($name, $limit = 5)
     {
         $db = Base::getConnection();
-
-        $stmt = $db->prepare("SELECT * FROM artists WHERE name LIKE :like ORDER BY name LIMIT :limit");
+        
+        if($limit != 0)
+            $qlimit = ' LIMIT :limit';
+        else
+            $qlimit = '';
+        
+        $stmt = $db->prepare("SELECT * FROM artists WHERE name LIKE :like ORDER BY name" . $qlimit);
         $like = "%" . $name . "%";
         $stmt->bindParam(":like", $like, PDO::PARAM_STR);
-        $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
+        if($limit != 0)
+            $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
         $stmt->execute();
 
 
