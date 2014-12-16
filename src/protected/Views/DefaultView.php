@@ -62,13 +62,30 @@ class DefaultView
             <img src = "css/icons/playlist.png" id ="playlists" alt = "playlists" class="toolbarBtn iconBtn"/> 
             <img src = "css/icons/fav.png" id ="favoris" alt = "favoris" class="toolbarBtn iconBtn"/> 
     </nav>
-
+    
+    
+    
+        
     <div id ="mainDiv">
         <p>ceci <br>est <br> la <br>div <br>principale </p>
     </div>
+    
+    
 
     <footer>
-        <p>ceci est le pied de page </p>
+        <div id="entetePlaylist"><img src="css/icons/voletUp.png" data-src-up="css/icons/voletUp.png" data-src-down="css/icons/voletDown.png" class="iconBtn" id="entetePlaylistBtn">
+        <div id="playlistInfos">Playlist 01</div>        
+        </div>
+        <div id="voletPlaylist">
+            <ul class="trackList">
+                <li>aaaaaa</li>
+                <li>aaaaaa</li>
+                <li>aaaaaa</li>
+                <li>aaaaaa</li>
+            </ul>
+        </div>
+        
+        <div id="audioPlayer"></div>
     </footer>
 
     <script src="js/jquery-1.11.1.min.js"></script>
