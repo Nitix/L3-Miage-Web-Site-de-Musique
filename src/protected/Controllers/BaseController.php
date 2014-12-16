@@ -78,6 +78,33 @@ class BaseController implements Controller
         echo json_encode($data);
     }
 
+    public function getArtistPage()
+    {
+        $data = array();
+        
+        $artist = Artist::findByID($_GET["id"]);
+        $tracks = Track::findByArtistID($_GET["id"]);
+        
+        $data["artiste"] = array();
+        $data["musiques"] = array();
+        
+        foreach ($tracks as $id => $track) {
+            $arrayT = array(
+                "track_id" => $track->getTrackId(),
+                "title" => $track->getTitle(),
+                "mp3_url" => $track->getMp3Url(),
+                "artist_id" => $track->getArtistId(),
+            );
+            array_push($data["musiques"], $arrayT);
+        }
+   
+        $arrayA = array( "artist_id" => $artist->getId(), "name" => $artist->getName(), "image_url" => $artist->getImageUrl(), "info" => $artist->getInfo());
+        //array_push($data["artiste"], $arrayA);
+        $data["artiste"] = $arrayA;
+        
+        echo json_encode($data);
+    }
+
     public function index()
     {
 

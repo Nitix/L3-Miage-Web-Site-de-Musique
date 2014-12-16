@@ -101,6 +101,43 @@ $("#btnRecherche").click(function () {
 function viewArtistPage(artist_id) {
     console.log("page de l'artiste : " + artist_id);
     //ouvrir la page de l'artiste
+
+    $.ajax({
+         url : 'index.php', //url du script PHP qu'on appelle
+         type : 'GET', // Le type de la requête HTTP, ici  GET
+         data : 'c=base&a=getArtistPage&id='+parseInt(artist_id),
+         dataType : 'JSON', //on demande du JSON en retour
+         success: function(data){
+            $("#mainDiv").empty();
+                        
+            $("#mainDiv").append('<div id="artistPageEntete"><img src="'+data.artiste.image_url+'" class="artistImage"/><h1>'+data.artiste.name+'</h1></div><div id="artistInfos"></div>');
+            $("#artistInfos").append('<p>'+data.artiste.info+'</p>');
+            
+            $("#mainDiv").append('<h3>Musiques</h3><ul class="trackList" id="trackList"></ul>');
+            
+            for (var i = 0; i < data.musiques.length; i++) {
+             
+                if (data.musiques[i].title != null) {
+                    console.log(data.musiques[i]);
+                    var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ')"/>';
+
+                    var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " id="addToPlaylist' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToPlaylist(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\')"/>';
+
+                    var favBtn = '<img src="css/icons/fav.png " id="addToFavs' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToFavs(' + data.musiques[i].track_id + ')"/>';
+
+                    var artist = "";
+
+                    if (data.musiques[i].name != null) {
+                        artist = '<a class="trackList_artist" onclick="viewArtistPage(' + data.musiques[i].artist_id + ')"></a>';
+                    }
+
+                    //$("#trackList").append('<li><div class="trackInfos">'+data.musiques[i].title+artist+'</div><div class="trackActions">'+favBtn+addToPlaylistBtn+playBtn+'</div></li>');
+                    $("#trackList").append('<li><div class="trackActions">' + favBtn + addToPlaylistBtn + playBtn + '</div><div class="trackInfos">' + data.musiques[i].title + artist + '</div></li>');
+                }
+
+            }
+         }
+    });
 }
 
 function lire(track_id) {

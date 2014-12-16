@@ -143,7 +143,7 @@ class Artist
 
         $stmt = $db->prepare("SELECT * FROM artists WHERE artist_id=:id ;");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-        $stmt->execute(array($id));
+        $stmt->execute();
 
         $response = $stmt->fetch();
 
