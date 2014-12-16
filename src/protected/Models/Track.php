@@ -217,7 +217,7 @@ class Track
     {
         $db = Base::getConnection();
 
-        $stmt = $db->prepare("SELECT * FROM tracks INNER JOIN artists ON tracks.artist_id = artists.artist_id  WHERE title LIKE :like ORDER BY title LIMIT :limit");
+        $stmt = $db->prepare("SELECT tracks.*, artists.name, artists.image_url FROM tracks INNER JOIN artists ON tracks.artist_id = artists.artist_id  WHERE tracks.title LIKE :like OR artists.name LIKE :like ORDER BY tracks.title");
         $like = "%" . $name . "%";
         $stmt->bindParam(":like", $like, PDO::PARAM_STR);
         $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
