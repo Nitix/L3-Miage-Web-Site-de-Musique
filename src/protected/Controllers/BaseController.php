@@ -64,7 +64,8 @@ class BaseController implements Controller
                 "name" => $track->getArtist()->getName(),
                 "image_url" => $track->getArtist()->getImageUrl()
             );
-            array_push($data["musiques"], $arrayT);
+            //array_push($data["musiques"], $arrayT);
+            $data["musiques"][] = $arrayT;
         }
         $artists = Artist::findByNameLike($_GET["q"], 0);
         foreach ($artists as $artistId => $artist) {
@@ -73,7 +74,8 @@ class BaseController implements Controller
                 'name' => $artist->getName(),
                 'image_url' => $artist->getImageUrl()
             );
-            array_push($data["artistes"], $arrayA);
+            //array_push($data["artistes"], $arrayA);
+            $data["artistes"][] = $arrayA;
         }
         echo json_encode($data);
     }
