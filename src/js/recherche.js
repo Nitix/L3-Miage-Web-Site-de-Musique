@@ -1,39 +1,39 @@
-$.widget( "custom.catcomplete", $.ui.autocomplete, {
-    _create: function() {
+$.widget("custom.catcomplete", $.ui.autocomplete, {
+    _create: function () {
         this._super();
-        this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+        this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
     },
-    _renderMenu: function( ul, items ) {
+    _renderMenu: function (ul, items) {
         var that = this,
             currentCategory = "";
-        $.each( items, function( index, item ) {
+        $.each(items, function (index, item) {
             var li;
-            if ( item.category != currentCategory ) {
-                ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+            if (item.category != currentCategory) {
+                ul.append("<li class='ui-autocomplete-category'>" + item.category + "</li>");
                 currentCategory = item.category;
             }
-            li = that._renderItemData( ul, item );
-            if ( item.category ) {
-                li.attr( "aria-label", item.category + " : " + item.label );
+            li = that._renderItemData(ul, item);
+            if (item.category) {
+                li.attr("aria-label", item.category + " : " + item.label);
             }
         });
     }
 });
 
-$( "#recherche" ).catcomplete({
+$("#recherche").catcomplete({
     source: 'index.php?c=base&a=autocomplete'
 });
 
 
 //ajout de l'evenement pour lancer la recherche avec la touche Entree
- $("#recherche").keydown(function(event){
-     if(event.keyCode == 13){
-         $("#btnRecherche").click();
-     }
- });
+$("#recherche").keydown(function (event) {
+    if (event.keyCode == 13) {
+        $("#btnRecherche").click();
+    }
+});
 
 //ajout de l'évenement "quand on clique sur le bouton de recherche"
-$("#btnRecherche").click(function() {
+$("#btnRecherche").click(function () {
 
     //appel ajax vers le script php
     $.ajax({
@@ -41,7 +41,7 @@ $("#btnRecherche").click(function() {
         type: 'GET', // Le type de la requête HTTP, ici  GET
         data: 'c=base&a=recherche&q=' + $("#recherche").val(), // c = controlleur PHP a executer, a = methode de ce controlleur a executer, q = recherche
         dataType: 'JSON', //on demande du JSON en retour
-        success: function(data) {
+        success: function (data) {
             console.log(data);
             //ici on va construire la liste des resultats de la recherche
 
@@ -167,7 +167,7 @@ function addNewPlaylistInPopup() {
         $("#newPlaylistName").focus();
         var noNameYet = true;
 
-        $("#newPlaylistName").keydown(function() {
+        $("#newPlaylistName").keydown(function () {
             if (noNameYet) {
                 noNameYet = false;
                 $(this).val("");
@@ -175,7 +175,7 @@ function addNewPlaylistInPopup() {
 
         });
 
-        $("#submitNewPlaylistBtn").click(function() {
+        $("#submitNewPlaylistBtn").click(function () {
             var playlistName = $("#newPlaylistName").val();
 
             //verifier si le nom n'existe pas deja en base
@@ -196,7 +196,7 @@ function addNewPlaylistInPopup() {
                     }, 1);
 
                     //on laisse un intervale de 1 ms pour ajouter a niveau le handler, afin d'eviter un bouclage d'execution de ce handler
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $("#createPlaylistLi").click(addNewPlaylistInPopup);
                     }, 1);
                 } else {
@@ -209,7 +209,7 @@ function addNewPlaylistInPopup() {
                     $("#createPlaylistLi").append("<p>Nouvelle playlist...<p>");
                     noNameYet = true;
                     //on laisse un intervale de 1 ms pour ajouter a niveau le handler, afin d'eviter un bouclage d'execution de ce handler
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $("#createPlaylistLi").click(addNewPlaylistInPopup);
                     }, 1);
 
@@ -217,7 +217,7 @@ function addNewPlaylistInPopup() {
             }
         });
 
-        $("#newPlaylistName").keydown(function(event) {
+        $("#newPlaylistName").keydown(function (event) {
             if (event.keyCode == 13) {
                 $("#submitNewPlaylistBtn").click();
             }
