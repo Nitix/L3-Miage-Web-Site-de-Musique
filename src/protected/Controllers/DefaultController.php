@@ -2,17 +2,18 @@
 
 namespace Controllers;
 
+use \Views\DefaultView;
+
 class DefaultController implements Controller
 {
 
     private static $actions = array(
         'index',
-        'autocomplete'
     );
 
     public function index()
     {
-        $view = new \Views\DefaultView();
+        $view = new DefaultView();
         $view->display();
     }
 

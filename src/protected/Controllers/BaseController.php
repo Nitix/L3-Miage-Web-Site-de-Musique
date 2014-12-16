@@ -2,6 +2,9 @@
 
 namespace Controllers;
 
+use Models\Artist;
+use Models\Track;
+
 class BaseController implements Controller
 {
 
@@ -17,24 +20,34 @@ class BaseController implements Controller
     
     public function autocomplete()
     {
-        $connexion = ConnexionGiver::getConnexion();
-        $bdd = ConnexionGiver::getDatabase();
-        
-        $query = "select nom from ( select title as 'nom' from tracks where title like '%" . $_GET["term"] . 
-        "%' union select name as 'nom' from artists where name like '%" . $_GET["term"] . "%' ) as temp order by nom limit 5";
-        $request = mysql_query($query);
-        $res = mysql_fetch_assoc($request);
+        try{
+            $array = array();
 
-        $array = array();
-        
-        while($res != false)
-        {
-            array_push($array, $res["nom"]);
-            $res = mysql_fetch_assoc($request);
+            $res = Track::findByNameLike($_GET["term"], 5);
+            foreach($res as $trackId => $track)
+            {
+                $data = array(
+                    'id' => $trackId,
+                    'name' => $track->getTitle(),
+                    'image' => $track->getArtistId()
+                    );
+                $array[] = array("category" => "Musique", "label" => $track->getTitle(), "data" => $data);
+            }
+
+            $res = Artist::findByNameLike($_GET["term"], 5);
+            foreach($res as $artistId => $artist)
+            {
+                $data = array(
+                    'id' => $artistId,
+                    'name' => $artist->getName(),
+                    'image' => $artist->getImageUrl()
+                );
+                $array[] = array("category" => "Artiste", "label" => $artist->getName(), "data" => $data);
+            }
+            echo json_encode($array);
+        }catch (\PDOException $e){
+            echo json_encode(array("errors" => "databaseDown"));
         }
-
-    
-        echo json_encode($array);
     }
     
     public function recherche()

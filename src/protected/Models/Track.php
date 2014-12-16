@@ -154,4 +154,39 @@ class Track
             return false;
         }
     }
+
+    /**
+     * Retrieves an array of all Artists which name's contains
+     * a specified sequence of characters.
+     * @param string $name The specified sequence of characters.
+     * @param int $limit the number of track to search
+     * @return Track[] array of all Artists which name's contains
+     * a specified sequence of characters.
+     * @throws \PDOException
+     */
+    public static function findByNameLike($name, $limit = 5)
+    {
+        $db = Base::getConnection();
+
+        $stmt = $db->prepare("SELECT * FROM tracks WHERE title LIKE :like ORDER BY title LIMIT :limit");
+        $like = "%" . $name . "%";
+        $stmt->bindParam(":like", $like, PDO::PARAM_STR);
+        $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+
+        $tab = array();
+        foreach ($stmt->fetchALL() as $response) {
+            $t = new Track();
+            $t->track_id = $response['track_id'];
+            $t->artist_id = $response['artist_id'];
+            $t->title = $response['title'];
+            $t->mp3_url = $response['mp3_url'];
+
+            $stmt->closeCursor();
+            $tab[$response['track_id']] = $t;
+        }
+        $stmt->closeCursor();
+        return $tab;
+    }
 }

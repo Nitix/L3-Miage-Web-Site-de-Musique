@@ -3,7 +3,7 @@
 /*
  * Database configuration
  */
-$config['db']['host'] = "";
+$config['db']['host'] = "mysql:host=localhost;dbname=DB;charset=UTF8";
 $config['db']['user'] = "";
 $config['db']['password'] = "";
 

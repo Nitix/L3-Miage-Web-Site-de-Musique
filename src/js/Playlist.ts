@@ -4,11 +4,11 @@
 
 class Playlist {
 
-    public getPreviousMusic() : string {
+    public getPreviousMusic():string {
         return "music.mp3";
     }
 
-    public getNextMusic() : string {
+    public getNextMusic():string {
         return "music2.mp3";
     }
 }
