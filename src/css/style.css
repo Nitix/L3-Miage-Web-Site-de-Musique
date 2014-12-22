@@ -428,15 +428,6 @@ left: 0;
 
 /**************************** Player ****************************/
 
-#cursorMusic {
-    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-    width: 100%; /* Specific width is required for Firefox. */
-}
-
-#cursorMusic{
-    -webkit-appearance: none;
-}
-
 #cursorMusic:focus {
     outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
 }
@@ -458,7 +449,6 @@ left: 0;
     border-radius: 3px;
     background: #ffffff;
     cursor: pointer;
-    margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
     box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
 }
 
@@ -484,14 +474,16 @@ left: 0;
     cursor: pointer;
 }
 
-#cursorMusic
-{
+#cursorMusic {
+    -webkit-appearance: none;
     width: 305px;
-    margin: 14px 0 0 -305px;
+    margin: 0px 0 0 -305px;
     background-color: transparent;
     vertical-align: middle;
 }
 
+
+/** Music progress **/
 #musicProgress
 {
     width: 300px;
@@ -504,8 +496,9 @@ progress {
     border: none;
     background-color: #f3f3f3;
     border: 0;
-    height: 18px;
+    height: 22px;
     border-radius: 50px;
+    vertical-align: middle;
 }
 /* Chrome */
 progress::-webkit-progress-bar  {
@@ -515,7 +508,7 @@ progress::-webkit-progress-bar  {
     border: none;
     background-color: #f3f3f3;
     border: 0;
-    height: 18px;
+    height: 22px;
     border-radius: 50px;
 }
 
@@ -524,15 +517,65 @@ progress::-moz-progress-bar  {
     border-radius: 50px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
     border: 0;
-    height: 18px;
+    height: 22px;
 }
 
 
 progress::-webkit-progress-value {
     background-color: #5aff33;
     border-radius: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
     border: 0;
-    height: 18px;
+    height: 22px;
+}
+
+/** Cursor Volume **/
+#volume:focus {
+    outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+#volume::-ms-track {
+    width: 100%;
+    cursor: pointer;
+    background: transparent; /* Hides the slider so custom styles can be added */
+    border-color: transparent;
+    color: transparent;
+}
+
+/* Special styling for WebKit/Blink */
+#volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
+    background: #5aff33;
+    cursor: pointer;
+}
+
+/* All the same stuff for Firefox */
+#volume::-moz-range-thumb
+{
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
+    background: #5aff33;
+    cursor: pointer;
+}
+
+/* All the same stuff for IE */
+#volume::-ms-thumb   {
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
+    background: #5aff33;
+    cursor: pointer;
+}
+
+#volume
+{
+    -webkit-appearance: none;
+    width: 120px;
+    border-radius: 5px;
 }
 
 #volumeControlContainer
@@ -540,5 +583,5 @@ progress::-webkit-progress-value {
     position: absolute;
     vertical-align: middle;
     height: 28px;
-    padding-top: 5px;
+    padding-top: 9px;
 }
