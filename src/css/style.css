@@ -155,8 +155,8 @@ footer{
     
     /*background-color: rgba(10,10,10,0.95);*/
     /*display: inline-block;*/
-    
-    width: calc(100%);
+
+    width: 100%; /* calc(100%) ??? */
     height: auto;
 position: absolute;
 bottom: 0;
@@ -169,7 +169,7 @@ left: 0;
     padding-top: 5px;
     background-color:#1A1A1A;
     min-height: 25px;
-    width: calc(100%);
+    width: 100%; /* calc(100%) ??? */
     overflow: hidden;
 }
 
@@ -217,9 +217,20 @@ left: 0;
     background-color: #2E2E2E;
 }
 
-#audioPlayer {
+#player {
     background-color: #2E2E2E;
-    height:90px;
+    height: 90px;
+    position: relative;
+}
+#player > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 50%;
+    height: 40%;
+    margin: auto;
 }
 
 #playlistsPopup {
@@ -404,7 +415,7 @@ left: 0;
 }
 
 ::-webkit-scrollbar-thumb:vertical {
-    height: calc(10%+10px);
+    height: calc(10% + 10px);
     background-color: gray;
     -webkit-border-radius: 3px;
 }
@@ -413,4 +424,121 @@ left: 0;
     width: 50px;
     background-color: rgba(0,0,0,0);
     -webkit-border-radius: 3px;
+}
+
+/**************************** Player ****************************/
+
+#cursorMusic {
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    width: 100%; /* Specific width is required for Firefox. */
+}
+
+#cursorMusic{
+    -webkit-appearance: none;
+}
+
+#cursorMusic:focus {
+    outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+#cursorMusic::-ms-track {
+    width: 100%;
+    cursor: pointer;
+    background: transparent; /* Hides the slider so custom styles can be added */
+    border-color: transparent;
+    color: transparent;
+}
+
+/* Special styling for WebKit/Blink */
+#cursorMusic::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+
+/* All the same stuff for Firefox */
+#cursorMusic::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+/* All the same stuff for IE */
+#cursorMusic::-ms-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+#cursorMusic
+{
+    width: 305px;
+    margin: 14px 0 0 -305px;
+    background-color: transparent;
+    vertical-align: middle;
+}
+
+#musicProgress
+{
+    width: 300px;
+}
+
+progress {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    background-color: #f3f3f3;
+    border: 0;
+    height: 18px;
+    border-radius: 50px;
+}
+/* Chrome */
+progress::-webkit-progress-bar  {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    background-color: #f3f3f3;
+    border: 0;
+    height: 18px;
+    border-radius: 50px;
+}
+
+progress::-moz-progress-bar  {
+    background-color: #5aff33;
+    border-radius: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    border: 0;
+    height: 18px;
+}
+
+
+progress::-webkit-progress-value {
+    background-color: #5aff33;
+    border-radius: 50px;
+    border: 0;
+    height: 18px;
+}
+
+#volumeControlContainer
+{
+    position: absolute;
+    vertical-align: middle;
+    height: 28px;
+    padding-top: 5px;
 }

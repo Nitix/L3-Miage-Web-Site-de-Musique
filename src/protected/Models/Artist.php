@@ -202,12 +202,12 @@ class Artist
     {
         $db = Base::getConnection();
         
-        if($limit != 0)
-            $qlimit = ' LIMIT :limit';
+        if($limit != 0) //Vraiment pas sûr,
+            $qlimit = 'LIMIT :limit';
         else
             $qlimit = '';
         
-        $stmt = $db->prepare("SELECT * FROM artists WHERE name LIKE :like ORDER BY name" . $qlimit);
+        $stmt = $db->prepare("SELECT * FROM artists WHERE name LIKE :like ORDER BY name " . $qlimit . ";");
         $like = "%" . $name . "%";
         $stmt->bindParam(":like", $like, PDO::PARAM_STR);
         if($limit != 0)

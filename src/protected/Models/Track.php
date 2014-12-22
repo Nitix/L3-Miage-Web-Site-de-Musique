@@ -217,7 +217,7 @@ class Track
     {
         $db = Base::getConnection();
 
-        $stmt = $db->prepare("SELECT tracks.*, artists.name, artists.image_url FROM tracks INNER JOIN artists ON tracks.artist_id = artists.artist_id  WHERE tracks.title LIKE :like OR artists.name LIKE :like ORDER BY tracks.title");
+        $stmt = $db->prepare("SELECT tracks.*, artists.artist_id, artists.name, artists.image_url FROM tracks INNER JOIN artists ON tracks.artist_id = artists.artist_id  WHERE tracks.title LIKE :like OR artists.name LIKE :like ORDER BY tracks.title LIMIT :limit");
         $like = "%" . $name . "%";
         $stmt->bindParam(":like", $like, PDO::PARAM_STR);
         $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
@@ -236,7 +236,6 @@ class Track
             $a->setId($response['artist_id']);
             $a->setImageUrl($response['image_url']);
             $a->setName($response['name']);
-            $a->setInfo($response['info']);
 
             $t->artist = $a;
             $tab[$response['track_id']] = $t;
