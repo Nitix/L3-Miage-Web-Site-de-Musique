@@ -75,11 +75,11 @@ class BaseController implements Controller
                 'image_url' => $artist->getImageUrl()
             );
             //array_push($data["artistes"], $arrayA);
-            $data["artistes"][] = $arrayA;
+            $data["artistes"][] =$arrayA;
         }
         echo json_encode($data);
     }
-
+    
     public function getArtistPage()
     {
         $data = array();

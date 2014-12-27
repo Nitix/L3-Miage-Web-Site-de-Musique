@@ -20,8 +20,9 @@ class FrontController
     private $controllers = array(
         'index' => FrontController::DEFAULT_CONTROLLER,
         'default' => FrontController::DEFAULT_CONTROLLER,
-        'base' => 'BaseController'
-        //'membres' => 'UserController'
+        'base' => 'BaseController',
+        'user' => 'UserController',
+        'guest' => 'GuestController'
     );
 
 

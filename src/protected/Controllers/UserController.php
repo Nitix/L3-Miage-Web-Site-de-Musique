@@ -21,6 +21,8 @@ class UserController implements Controller
         'register' => false,
         'update' => true,
         'view' => false,
+        'getPlaylists' => true,
+        'addPlaylist' => true
     );
 
     /**
@@ -34,6 +36,71 @@ class UserController implements Controller
         } else {
             $this->view();
         }
+    }
+    
+    function getPlaylistsInSession()
+    {
+        $array = array();
+        
+        if(isset($_SESSION["playlists"]))
+        {
+            foreach($_SESSION["playlists"] as $playlist)
+            {
+                $array[] = array(
+                        "playlist_id" => $playlist->getPlaylistId(),
+                        "playlist_name" => $playlist->getPlaylistName()
+                    );
+            }
+        }
+        
+        echo json_encode($array);
+    }
+    
+    function addPlaylistInSession()
+    {
+        if(!isset($_SESSION["playlists"]))
+        {
+            $_SESSION["playlists"] = array();
+        }
+        
+        $alreadyExists = false;
+        
+        foreach($_SESSION["playlists"] as $pl)
+        {
+            if($pl->getPlaylistName() == $_POST["newPlaylistName"])
+            {
+                $alreadyExists = true;
+                break;
+            }
+        }
+        
+        if($alreadyExists)
+        {
+            echo json_encode(false);
+        }
+        else
+        {
+            $npl = new Playlist();
+            $npl->setUserId(null);
+            $npl->setPlaylistId(null);
+            $npl->setPlaylistName($_POST["newPlaylistName"]);
+            
+            $_SESSION["playlists"][] = $npl;
+            
+            $array = array();
+            
+            foreach($_SESSION["playlists"] as $pl)
+            {
+                $array[] = array(
+                        "playlist_id" => $pl->getPlaylistId(),
+                        "user_id" => $pl->getUserId(),
+                        "playlist_name" => $pl->getPlaylistName()
+                    );
+            }
+            
+            echo json_encode($array);
+        }
+        
     }
 
     /**

@@ -42,11 +42,10 @@ $("#btnRecherche").click(function () {
         data: 'c=base&a=recherche&q=' + $("#recherche").val(), // c = controlleur PHP a executer, a = methode de ce controlleur a executer, q = recherche
         dataType: 'JSON', //on demande du JSON en retour
         success: function (data) {
-            console.log(data);
+       
             //ici on va construire la liste des resultats de la recherche
 
             $("#mainDiv").empty();
-
 
             if ((data.musiques.length == 0) && (data.artistes.length == 0)) {
                 $("#mainDiv").append('<br><h3>Aucun artiste un morceau trouvé</h3>');
@@ -57,8 +56,10 @@ $("#btnRecherche").click(function () {
                 if (data.musiques.length == 0) {
                     $("#tracksFound").append('<h5>Aucune musique trouvée</h5>');
                 } else {
+
                     $("#tracksFound").append('<ul class="trackList" id="trackList"></ul>');
                     for (var i = 0; i < data.musiques.length; i++) {
+             
                         if (data.musiques[i].title != null) {
                             var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ')"/>';
 
@@ -99,13 +100,13 @@ $("#btnRecherche").click(function () {
 });
 
 function viewArtistPage(artist_id) {
-    console.log("page de l'artiste : " + artist_id);
+    console.log("page de l'artiste : " + parseInt(artist_id));
     //ouvrir la page de l'artiste
-
+    
     $.ajax({
          url : 'index.php', //url du script PHP qu'on appelle
          type : 'GET', // Le type de la requête HTTP, ici  GET
-         data : 'c=base&a=getArtistPage&id='+parseInt(artist_id),
+         data : 'c=base&a=getArtistPage&id='+artist_id,
          dataType : 'JSON', //on demande du JSON en retour
          success: function(data){
             $("#mainDiv").empty();
@@ -131,7 +132,6 @@ function viewArtistPage(artist_id) {
                         artist = '<a class="trackList_artist" onclick="viewArtistPage(' + data.musiques[i].artist_id + ')"></a>';
                     }
 
-                    //$("#trackList").append('<li><div class="trackInfos">'+data.musiques[i].title+artist+'</div><div class="trackActions">'+favBtn+addToPlaylistBtn+playBtn+'</div></li>');
                     $("#trackList").append('<li><div class="trackActions">' + favBtn + addToPlaylistBtn + playBtn + '</div><div class="trackInfos">' + data.musiques[i].title + artist + '</div></li>');
                 }
 
@@ -167,47 +167,76 @@ function addToPlaylist(track_id, track_title, track_artist) {
     $("#playlistsPopup").append('<ul id="userPlaylists" class="trackList"></ul>');
 
     //le premier LI sert a ajouter une playlist si besoin
-    $("#userPlaylists").append('<li id="createPlaylistLi" data-edition-mode="false"><img src="css/icons/add.png" class="iconBtn"/><p>Nouvelle playlist...<p></li>')
-
-    for (var i = 0; i < 20; i++) {
-        $("#userPlaylists").append('<li>aaaaaaaaaaaaaa</li>');
-    }
+    $("#userPlaylists").empty();
+    $("#userPlaylists").append('<li id="createPlaylistLi" data-edition-mode="false"><img src="css/icons/add.png" class="iconBtn"/><p>Nouvelle playlist...<p></li>');
+    
+    //on recupere les playlist dans la SESSION
+    getPlaylistsInSession(track_id);
+   
 
     //si on clique dessus, un formulaire pour entrer le nom de la playlist a créer s'ouvre dans le li
-    $("#createPlaylistLi").click(addNewPlaylistInPopup);
-    /*
-     $.ajax({
-     url : 'index.php', //url du script PHP qu'on appelle
-     type : 'GET', // Le type de la requête HTTP, ici  GET
-     data : 'c=base&a=getUserPlaylists',
-     dataType : 'JSON', //on demande du JSON en retour
-     success: function(data){
-     }
-     });*/
+    $("#createPlaylistLi").click(function(){
+        addNewPlaylistInPopup(track_id);
+    });
+    
+     
+}
+
+function getPlaylistsInSession(track_id)
+{
+    $.ajax({
+         url : 'index.php', //url du script PHP qu'on appelle
+         type : 'GET', // Le type de la requête HTTP, ici  GET
+         data : 'c=guest&a=getPlaylists',
+         dataType : 'JSON', //on demande du JSON en retour
+         success: function(data){
+
+             if(data.length == 0)
+             {
+                 //aucune playlist
+                 $("#userPlaylists").append("Aucune playlist");
+                 
+             }
+             else
+             {
+                 //afficher les playlists
+                
+                 
+                 for(var i=0; i < data.length ; i++)
+                 {
+                     $("#userPlaylists").append('<li onclick="addToThisPlaylist('+track_id+','+data[i].playlist_id+')" data-name="'+data[i].playlist_name+'">'+data[i].playlist_name+'</li>');
+                 }
+                 
+             }
+         }
+     });
 }
 
 function addToFavs(track_id) {
     console.log("ajout aux favs de : " + track_id);
     //ajouter la musique aux favs
 }
-function addNewPlaylistInPopup() {
+function addNewPlaylistInPopup(track_id) {
     //si on n'est pas en mode edition, on y entre
     $("#createPlaylistLi").animate({
         backgroundColor: "#2E2E2E"
     }, 1);
-
-    if ($(this).attr("data-edition-mode") == "false") {
-        console.log($(this).attr("data-edition-mode"));
-        $(this).empty();
-        $(this).attr("data-edition-mode", true);
-        $(this).append('<img src="css/icons/add.png" id="submitNewPlaylistBtn" class="iconBtn"/><input id="newPlaylistName" type="text" value="Nom de la playlist...">');
+    
+    
+    if ($("#createPlaylistLi").attr("data-edition-mode") == "false") {
+        
+        $("#createPlaylistLi").empty();
+        $("#createPlaylistLi").attr("data-edition-mode", true);
+        $("#createPlaylistLi").append('<img src="css/icons/add.png" id="submitNewPlaylistBtn" class="iconBtn"/><input id="newPlaylistName" type="text" value="Nom de la playlist...">');
         $("#newPlaylistName").focus();
         var noNameYet = true;
 
         $("#newPlaylistName").keydown(function () {
             if (noNameYet) {
+                
                 noNameYet = false;
-                $(this).val("");
+                console.log(noNameYet);
+                $("#newPlaylistName").val("");
             }
 
         });
@@ -215,12 +244,20 @@ function addNewPlaylistInPopup() {
         $("#submitNewPlaylistBtn").click(function () {
             var playlistName = $("#newPlaylistName").val();
 
-            //verifier si le nom n'existe pas deja en base
-            //si oui,
-            alreadyExists = true;
+            //verifier si le nom n'existe pas deja en SESSION
+            alreadyExists = false;
+            
+            //boucle qui verifie s'il n'existe pas deja une playlist de ce nom
+            $("#userPlaylists").children().each(function(){
+                if($(this).attr("data-name") == playlistName)
+                {
+                    alreadyExists = true;
+                }
+            });
 
             if (!noNameYet) {
                 if (alreadyExists) {
+                    //dans ce cas, le nom existe deja
                     //on affiche un message d'erreur sur background color rouge orange, et on quitte le mode edition
 
                     $("#createPlaylistLi").off("click");
@@ -238,17 +275,42 @@ function addNewPlaylistInPopup() {
                     }, 1);
                 } else {
 
-                    //ajout en base, rafraichissement de la liste dans la popup pour afficher la nouvelle playlist, et retour a la normale pour createPlaylistLi
+                    //ajout en base puis en SESSION, rafraichissement de la liste dans la popup pour afficher la nouvelle playlist, et retour a la normale pour createPlaylistLi
+                    $.ajax({
+                         url : 'index.php', //url du script PHP qu'on appelle
+                         type : 'GET', // Le type de la requête HTTP, ici  GET
+                         data : 'c=guest&a=addPlaylist&newPlaylistName='+playlistName,
+                         dataType : 'JSON', //on demande du JSON en retour
+                         success: function(data){
+                            if(data != false)
+                            {
+                                
+                                //on remet le bouton d'ajout de playlist a l'etat normal
+                                $("#createPlaylistLi").off("click");
+                                
+                                $("#createPlaylistLi").attr("data-edition-mode", false);
+                                $("#createPlaylistLi").children("p").remove();
+                                $("#createPlaylistLi").children("input").remove();
+                                $("#createPlaylistLi").append("<p>Nouvelle playlist...<p>");
+                                
+                                noNameYet = true;
+                                
+                                var tmp = $("#createPlaylistLi");
+                                $("#userPlaylists").empty();
+                                $("#userPlaylists").append(tmp);
+                                
+                                //on met a jour la liste des playlists
+                                getPlaylistsInSession(track_id);
+                                
+                                //on laisse un intervale de 1 ms pour ajouter a niveau le handler, afin d'eviter un bouclage d'execution de ce handler
+                                setTimeout(function () {
+                                    $("#createPlaylistLi").click(addNewPlaylistInPopup);
+                                }, 1);
+                            }
+                         }
+                     });
 
-                    $("#createPlaylistLi").off("click");
-                    $("#createPlaylistLi").empty();
-                    $("#createPlaylistLi").attr("data-edition-mode", false);
-                    $("#createPlaylistLi").append("<p>Nouvelle playlist...<p>");
-                    noNameYet = true;
-                    //on laisse un intervale de 1 ms pour ajouter a niveau le handler, afin d'eviter un bouclage d'execution de ce handler
-                    setTimeout(function () {
-                        $("#createPlaylistLi").click(addNewPlaylistInPopup);
-                    }, 1);
+                    
 
                 }
             }
