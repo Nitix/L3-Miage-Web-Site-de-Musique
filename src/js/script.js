@@ -7,6 +7,83 @@ var currentMousePos = { x: -1, y: -1 };
         currentMousePos.x = event.pageX;
         currentMousePos.y = event.pageY;
     });
+    
+function afficherPlaylists()
+{
+    $("#mainDiv").empty();
+    $("#mainDiv").append('<h3>Vos playlists</h3>');
+    $("#mainDiv").append('<ul id="userPlaylists" class="trackList"></ul>');
+    
+    $.ajax({
+        url: 'index.php', //url du script PHP qu'on appelle
+        type: 'GET', // Le type de la requête HTTP, ici  GET
+        data: 'c=guest&a=getPlaylists', // c = controlleur PHP a executer, a = methode de ce controlleur a executer, q = recherche
+        dataType: 'JSON', //on demande du JSON en retour
+        success: function (data) {
+            
+            if(data.length == 0)
+             {
+                 //aucune playlist
+                 $("#userPlaylists").append("Aucune playlist");
+                 
+             }
+             else
+             {
+                 //afficher les playlists
+                console.log(data);
+                 
+                 for(var i=0; i < data.length ; i++)
+                 {
+                     $("#userPlaylists").append('<li class="playLi" data-name="'+data[i].playlist_name+'"><p onclick="chargerPlaylist('+data[i].playlist_id+')">'+data[i].playlist_name+'</p><img src="css/icons/bin.png" class="iconBtn" onclick="delPlaylist('+data[i].playlist_id+')"/></li>');
+                 }
+                 
+             }
+        }
+    });
+}
+
+function chargerPlaylist(playlist_id)
+{
+    console.log(playlist_id);
+    
+    $.ajax({
+        url: 'index.php', //url du script PHP qu'on appelle
+        type: 'GET', // Le type de la requête HTTP, ici  GET
+        data: 'c=guest&a=getPlaylist&id='+playlist_id, // c = controlleur PHP a executer, a = methode de ce controlleur a executer
+        dataType: 'JSON', //on demande du JSON en retour
+        success: function (data) {
+            console.log(data);
+            if(data != false)
+             {
+                 $("#playlistInfos").empty();
+                 $("#playlistInfos").append(data.playlist_name);
+                 $("#playlistInfos").attr("data-playlist-id",playlist_id);
+                 
+                 var tracks = $("#voletPlaylist").children(".trackList");
+                 tracks.empty();
+                 
+                 for(var i = 0; i < data.tracks.length; i++)
+                 {
+                     if (data.tracks[i].title != null) {
+                            var playBtn = '<img src="css/icons/play.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" onclick="lire(' + data.tracks[i].track_id + ')"/>';
+
+                            var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" onclick="addToPlaylist(' + data.tracks[i].track_id + ',\'' + data.tracks[i].title + '\',\'' + data.tracks[i].name + '\','+data.tracks[i].artist_id+',\''+data.tracks[i].mp3_url+'\')"/>';
+
+                            var favBtn = '<img src="css/icons/fav.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" onclick="addToFavs(' + data.tracks[i].track_id + ')"/>';
+
+                            var artist = "";
+
+                            if (data.tracks[i].name != null) {
+                                artist = '<a class="trackList_artist" onclick="viewArtistPage(' + data.tracks[i].artist_id + ')">' + data.tracks[i].name + '</a>';
+                            }
+
+                            tracks.append('<li><div class="trackActions">' + favBtn + addToPlaylistBtn + playBtn + '</div><div class="trackInfos">' + data.tracks[i].title + artist + '</div></li>');
+                        }
+                 }
+             }
+        }
+    });
+}
 
 function DivInscription(){
     $("#mainDiv").empty();

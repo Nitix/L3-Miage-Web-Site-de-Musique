@@ -109,6 +109,10 @@ nav{
     display: inline;
 }
 
+.trackInfos {
+    float: left;
+}
+
 .trackList > li > .trackInfos {
     overflow: hidden;
     height: 19px;
@@ -249,6 +253,18 @@ left: 0;
     overflow: auto;
     display: block;
     height: 90%;
+}
+
+#userPlaylists > .playLi > img {
+    float: right;
+    height: 18px;
+}
+
+#userPlaylists > .playLi > p {
+    margin: 0px;
+    padding: 0px;
+    display: inline-block;
+    cursor: pointer;
 }
 
 #createPlaylistLi{

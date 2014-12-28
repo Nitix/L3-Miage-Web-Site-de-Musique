@@ -34,6 +34,7 @@ class GuestController implements Controller
     {
         $array = array();
        
+       //si la liste des playlists n'existe pas on l'a créé
         if(isset($_SESSION["playlists"]))
         {
             $array = $_SESSION["playlists"];
@@ -42,8 +43,37 @@ class GuestController implements Controller
         echo json_encode($array);
     }
     
+    function getPlaylist()
+    {
+        $trouve = false;
+        
+        //si la liste des playlists n'existe pas on l'a créé
+        if(isset($_SESSION["playlists"]))
+        {
+            $array = $_SESSION["playlists"];
+        }
+        
+        //on cherche la playlist par son id
+        foreach($_SESSION["playlists"] as $plnum => $pl)
+        {
+            
+            if($pl["playlist_id"] == $_GET["id"])
+            {
+                $trouve = true;
+                echo json_encode($pl);
+                break;
+            }
+        }
+        
+        if(!$trouve)
+        {
+            echo json_encode(false);
+        }
+    }
+    
     function addPlaylist()
     {
+        //si la liste des playlists n'existe pas, on la créé
         if(!isset($_SESSION["playlists"]))
         {
             $_SESSION["playlists"] = array();
@@ -51,6 +81,7 @@ class GuestController implements Controller
         
         $alreadyExists = false;
         
+        //on cherche si il n'existe pas deja une playlist de ce nom
         foreach($_SESSION["playlists"] as $plnum => $pl)
         {
             
@@ -61,28 +92,34 @@ class GuestController implements Controller
             }
         }
         
+        //si une playlist avec ce nom existe deja, ajout impossible
         if($alreadyExists)
         {
             echo json_encode(false);
         }
         else
         {
+            //sinon,
             $npl = array();
             
+            //si la il n'y avait aucune playlist avant, on créé la premiere
             if(count($_SESSION["playlists"]) == 0)
             {
                 $id = 0;
+                $_SESSION["playlists_lastid"] = 0;
             }
             else
             {
-                $len = count($_SESSION["playlists"]);
-                $lastId = $_SESSION["playlists"][$len - 1]["playlist_id"];
-                $id = $lastId + 1;
+                //sinon on en créé une nouvelle avec un ID auto incrementé
+                $_SESSION["playlists_lastid"] = $_SESSION["playlists_lastid"] + 1;
+                $id = $_SESSION["playlists_lastid"];
             }
             
+            //on créé la nouvelle playlist
             $npl["playlist_id"] = $id;
             $npl["playlist_name"] = $_GET["newPlaylistName"];
             
+            //puis on ajoute la nouvelle playlist
             $_SESSION["playlists"][] = $npl;
             
             //si l'utilisateur est loggé, on enregistre la modification en base
@@ -91,10 +128,80 @@ class GuestController implements Controller
                 //ajouter la playlist en base
             }
             
+            //on retourne la nouvelle liste de playlist obtenue
             echo $this->getPlaylists();
         }
         
     }
+    
+    function delPlaylist()
+    {
+
+        $tmp = array();
+        $res = false;
+        
+        foreach($_SESSION["playlists"] as $plnum => $pl)
+        {
+            if($pl["playlist_id"] == $_GET["id"])
+            {
+                if(isset($_SESSION["user"]))
+                {
+                    //supprimer la playlist en base
+                }
+                $res = true;
+            }
+            else
+            {
+                $tmp[] = $pl;
+            }
+        }
+        
+        //unset($_SESSION["playlists"]);
+        $_SESSION["playlists"] = array();
+        
+        foreach($tmp as $plnum => $pl)
+        {
+            $_SESSION["playlists"][] = $pl;
+        }
+        
+        echo json_encode($res);
+    }
+    
+    function addTrackToPlaylist()
+    {
+        $track_id = $_GET["trid"];
+        $playlist_id = $_GET["plid"];
+        
+        foreach($_SESSION["playlists"] as $plnum => $pl)
+        {
+            if($pl["playlist_id"] == $playlist_id)
+            {
+                if(!isset($_SESSION["playlists"][$plnum]["tracks"]))
+                {
+                    $_SESSION["playlists"][$plnum]["tracks"] = array();
+                }
+                
+                $track = array();
+                $track["track_id"] = $track_id;
+                $track["title"] = $_GET["trtitle"];
+                $track["name"] = $_GET["trart"];
+                $track["artist_id"] = $_GET["artid"];
+                $track["mp3_url"] = $_GET["trurl"];
+                
+                $_SESSION["playlists"][$plnum]["tracks"][] = $track;
+                
+                if(isset($_SESSION["user"]))
+                {
+                    //ajoute la musique a la playlist en base
+                }
+                break;
+            }
+        }
+        
+        //var_dump($_SESSION);
+        echo json_encode(true);
+    }
+    
 
     /**
      * Check if the controller has the action

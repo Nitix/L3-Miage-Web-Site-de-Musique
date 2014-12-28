@@ -56,14 +56,14 @@ $("#btnRecherche").click(function () {
                 if (data.musiques.length == 0) {
                     $("#tracksFound").append('<h5>Aucune musique trouvée</h5>');
                 } else {
-
+                    console.log(data);
                     $("#tracksFound").append('<ul class="trackList" id="trackList"></ul>');
                     for (var i = 0; i < data.musiques.length; i++) {
              
                         if (data.musiques[i].title != null) {
                             var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ')"/>';
 
-                            var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " id="addToPlaylist' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToPlaylist(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\')"/>';
+                            var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " id="addToPlaylist' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToPlaylist(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\','+data.musiques[i].artist_id+',\''+data.musiques[i].mp3_url+'\')"/>';
 
                             var favBtn = '<img src="css/icons/fav.png " id="addToFavs' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToFavs(' + data.musiques[i].track_id + ')"/>';
 
@@ -122,7 +122,7 @@ function viewArtistPage(artist_id) {
                     console.log(data.musiques[i]);
                     var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ')"/>';
 
-                    var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " id="addToPlaylist' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToPlaylist(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\')"/>';
+                    var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " id="addToPlaylist' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToPlaylist(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\','+data.musiques[i].artist_id+',\''+data.musiques[i].mp3_url+'\')"/>';
 
                     var favBtn = '<img src="css/icons/fav.png " id="addToFavs' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToFavs(' + data.musiques[i].track_id + ')"/>';
 
@@ -145,8 +145,8 @@ function lire(track_id) {
     //balancer la musique dans le lecteur
 }
 
-function addToPlaylist(track_id, track_title, track_artist) {
-    console.log("ajout a une playlist de : " + track_id);
+function addToPlaylist(track_id, track_title, track_artist, artist_id, track_url) {
+    console.log("ajout à une playlist de : " + track_id);
     //ouvrir la fenetre des playlists pour en choisir une ou ajouter la musique
     $("#playlistsPopup").remove();
     $("body").append('<div id="playlistsPopup"></div>');
@@ -171,19 +171,20 @@ function addToPlaylist(track_id, track_title, track_artist) {
     $("#userPlaylists").append('<li id="createPlaylistLi" data-edition-mode="false"><img src="css/icons/add.png" class="iconBtn"/><p>Nouvelle playlist...<p></li>');
     
     //on recupere les playlist dans la SESSION
-    getPlaylistsInSession(track_id);
+    getPlaylistsInSession(track_id, track_title, track_artist, artist_id, track_url);
    
 
     //si on clique dessus, un formulaire pour entrer le nom de la playlist a créer s'ouvre dans le li
     $("#createPlaylistLi").click(function(){
-        addNewPlaylistInPopup(track_id);
+        addNewPlaylistInPopup(track_id, track_title, track_artist, artist_id, track_url);
     });
     
      
 }
 
-function getPlaylistsInSession(track_id)
+function getPlaylistsInSession(track_id, track_title, track_artist, artist_id, track_url)
 {
+    console.log("TRACK "+track_id);
     $.ajax({
          url : 'index.php', //url du script PHP qu'on appelle
          type : 'GET', // Le type de la requête HTTP, ici  GET
@@ -200,13 +201,37 @@ function getPlaylistsInSession(track_id)
              else
              {
                  //afficher les playlists
-                
+                console.log(data);
                  
                  for(var i=0; i < data.length ; i++)
                  {
-                     $("#userPlaylists").append('<li onclick="addToThisPlaylist('+track_id+','+data[i].playlist_id+')" data-name="'+data[i].playlist_name+'">'+data[i].playlist_name+'</li>');
+                     $("#userPlaylists").append('<li class="playLi" data-name="'+data[i].playlist_name+'"><p onclick="addToThisPlaylist('+track_id+',\''+ track_title+'\',\''+ track_artist+'\','+ artist_id+',\''+ track_url+'\','+data[i].playlist_id+')">'+data[i].playlist_name+'</p><img src="css/icons/bin.png" class="iconBtn" onclick="delPlaylistInPopup('+track_id+',\''+ track_title+'\',\''+ track_artist+'\','+ artist_id+',\''+ track_url+'\','+data[i].playlist_id+')"/></li>');
                  }
                  
+             }
+         }
+     });
+}
+
+function addToThisPlaylist(track_id, track_title, track_artist, artist_id, track_url, playlist_id)
+{
+    $.ajax({
+         url : 'index.php', //url du script PHP qu'on appelle
+         type : 'GET', // Le type de la requête HTTP, ici  GET
+         data : 'c=guest&a=addTrackToPlaylist&trid='+track_id+'&trtitle='+track_title+'&trart='+track_artist+'&artid='+artist_id+'&trurl='+track_url+'&plid='+playlist_id,
+         dataType : 'JSON', //on demande du JSON en retour
+         success: function(data){
+
+             if(data == true)
+             {
+                 //si on vient de modifier une playlist actuellement en cours de lecture, on la met a jour dans le volet
+                 if($("#playlistInfos").attr("data-playlist-id") == playlist_id)
+                 {
+                     chargerPlaylist(playlist_id);
+                 }
+                 
+                 alert("La musique -"+track_title+"- a bien été ajoutée à cette playlist");
+                 $('#playlistsPopup').remove()
              }
          }
      });
@@ -216,7 +241,36 @@ function addToFavs(track_id) {
     console.log("ajout aux favs de : " + track_id);
     //ajouter la musique aux favs
 }
-function addNewPlaylistInPopup(track_id) {
+
+function delPlaylistInPopup(track_id, track_title, track_artist, artist_id, track_url, playlist_id){
+    
+    $.ajax({
+         url : 'index.php', //url du script PHP qu'on appelle
+         type : 'GET', // Le type de la requête HTTP, ici  GET
+         data : 'c=guest&a=delPlaylist&id='+playlist_id,
+         dataType : 'JSON', //on demande du JSON en retour
+         success: function(data){
+             
+             if(data == true)
+             {
+                 var tmp = $("#createPlaylistLi");
+                $("#userPlaylists").empty();
+                $("#userPlaylists").append(tmp);
+                                
+                //on met a jour la liste des playlists
+                getPlaylistsInSession(track_id, track_title, track_artist, artist_id, track_url);
+                
+                //si on clique dessus, un formulaire pour entrer le nom de la playlist a créer s'ouvre dans le li
+                $("#createPlaylistLi").click(function(){
+                    addNewPlaylistInPopup(track_id, track_title, track_artist, artist_id, track_url);
+                });
+             }
+         }
+     });
+    
+}
+
+function addNewPlaylistInPopup(track_id, track_title, track_artist, artist_id, track_url) {
     //si on n'est pas en mode edition, on y entre
     $("#createPlaylistLi").animate({
         backgroundColor: "#2E2E2E"
@@ -300,11 +354,15 @@ function addNewPlaylistInPopup(track_id) {
                                 $("#userPlaylists").append(tmp);
                                 
                                 //on met a jour la liste des playlists
-                                getPlaylistsInSession(track_id);
+                                getPlaylistsInSession(track_id, track_title, track_artist, artist_id, track_url);
                                 
                                 //on laisse un intervale de 1 ms pour ajouter a niveau le handler, afin d'eviter un bouclage d'execution de ce handler
                                 setTimeout(function () {
-                                    $("#createPlaylistLi").click(addNewPlaylistInPopup);
+                                    
+                                    //si on clique dessus, un formulaire pour entrer le nom de la playlist a créer s'ouvre dans le li
+                                    $("#createPlaylistLi").click(function(){
+                                        addNewPlaylistInPopup(track_id, track_title, track_artist, artist_id, track_url);
+                                    });
                                 }, 1);
                             }
                          }

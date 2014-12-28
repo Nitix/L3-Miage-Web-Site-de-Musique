@@ -56,7 +56,7 @@ class DefaultView
             <div class="toolbarSeparator"></div>
             
             <img src="css/icons/gear.png" id="reglages" alt="reglages" class="toolbarBtn iconBtn"/>
-            <img src = "css/icons/playlist.png" id ="playlists" alt = "playlists" class="toolbarBtn iconBtn"/> 
+            <img src = "css/icons/playlist.png" id ="playlists" alt = "playlists" class="toolbarBtn iconBtn" onclick="afficherPlaylists()"/> 
             <img src = "css/icons/fav.png" id ="favoris" alt = "favoris" class="toolbarBtn iconBtn"/> 
     </nav>
     
