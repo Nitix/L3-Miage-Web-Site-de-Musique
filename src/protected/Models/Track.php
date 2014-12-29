@@ -140,6 +140,29 @@ class Track
         }
     }
 
+    public static function findByArtistID($id)
+    {
+       $db = Base::getConnection();
+
+        $stmt = $db->prepare("SELECT * FROM tracks WHERE artist_id = :id");
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+
+        $tab = array();
+        foreach ($stmt->fetchALL() as $response) {
+            $t = new Track();
+            $t->track_id = $response['track_id'];
+            $t->artist_id = $response['artist_id'];
+            $t->title = $response['title'];
+            $t->mp3_url = $response['mp3_url'];
+
+            $tab[$response['track_id']] = $t;
+        }
+        $stmt->closeCursor();
+        return $tab;
+    }
+
     /**
      * Retrieve an Track through his title.
      * @param string $title Title of the track

@@ -61,7 +61,7 @@ $("#btnRecherche").click(function () {
                     for (var i = 0; i < data.musiques.length; i++) {
              
                         if (data.musiques[i].title != null) {
-                            var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ')"/>';
+                            var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\','+data.musiques[i].artist_id+',\''+data.musiques[i].mp3_url+'\')"/>';
 
                             var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " id="addToPlaylist' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToPlaylist(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\','+data.musiques[i].artist_id+',\''+data.musiques[i].mp3_url+'\')"/>';
 
@@ -120,7 +120,7 @@ function viewArtistPage(artist_id) {
              
                 if (data.musiques[i].title != null) {
                     console.log(data.musiques[i]);
-                    var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ')"/>';
+                    var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\','+data.musiques[i].artist_id+',\''+data.musiques[i].mp3_url+'\')"/>';
 
                     var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " id="addToPlaylist' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToPlaylist(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\','+data.musiques[i].artist_id+',\''+data.musiques[i].mp3_url+'\')"/>';
 
@@ -140,9 +140,11 @@ function viewArtistPage(artist_id) {
     });
 }
 
-function lire(track_id) {
-    console.log("lecture : " + track_id);
-    //balancer la musique dans le lecteur
+function lire(track_id, track_title, track_artist, artist_id, mp3_url) {
+    console.log("lecture : " + track_id+' '+ track_title+' '+ track_artist+ ' '+ artist_id+' '+ mp3_url);
+    console.log(p);
+    p.setTrack(mp3_url);
+    p.play();
 }
 
 function addToPlaylist(track_id, track_title, track_artist, artist_id, track_url) {
