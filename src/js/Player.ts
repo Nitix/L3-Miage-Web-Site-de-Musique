@@ -3,6 +3,7 @@
  */
 ///<reference path="headers/jquery/jquery.d.ts" />
 ///<reference path="Playlist.ts" />
+///<reference path="headers/notify/notify.d.ts" />
 
 class Player {
     private isMusicSet:boolean = false;
@@ -11,6 +12,7 @@ class Player {
 
     private playlist:Playlist;
 
+    private player:HTMLDivElement = <HTMLDivElement>document.getElementById("player");
     private audio:HTMLAudioElement = <HTMLAudioElement>document.getElementById("audio");
     private source:HTMLSourceElement = <HTMLSourceElement>document.getElementsByTagName("source")[0];
     private progress:HTMLProgressElement = <HTMLProgressElement>document.getElementById("musicProgress");
@@ -24,6 +26,14 @@ class Player {
         $(this.audio).on('ended', function () {
             p.showPlayButton();
             p.next()
+        });
+        $(this.audio).on("error stalled", function(e){
+            p.showPlayButton();
+            p.error(e);
+        });
+        $(this.source).on("error stalled", function(e){
+            p.showPlayButton();
+            p.error(e);
         });
         $("#play").on('click', function () {
             p.togglePlay();
@@ -56,6 +66,7 @@ class Player {
     public setTrack(track:string):void {
         if (track !== null) {
             this.source.src = track;
+            this.isMusicSet = true;
             this.audio.load();
             this.audio.pause();
             this.progress.setAttribute("value", "0");
@@ -75,7 +86,7 @@ class Player {
             if (track !== null) {
                 this.setTrack(track);
             } else {
-                console.log("NOTIFICATION aucune musique");
+                $(this.player).notify("Aucune musique en cours ou suivante", {elementPosition: 'top center', className : "warn"});
             }
         }
     }
@@ -90,7 +101,7 @@ class Player {
         if (track !== null)
             this.setTrack(track);
         else
-            console.log("NOTIFICATION pas de prochaine musique");
+            $(this.player).notify("Aucune musique suivante", {elementPosition: 'top center', className : "warn"});
     }
 
     public previous():void {
@@ -98,7 +109,11 @@ class Player {
         if (track !== null)
             this.setTrack(track);
         else
-            console.log("NOTIFICATION pas de précèdente musique");
+            $(this.player).notify("Aucune musique précèdente", {elementPosition: 'top center', className : "warn"});
+    }
+
+    public error(e):void {
+        $(this.player).notify("Erreur lors du chargement de la musique", {elementPosition: 'top center', className : "error"});
     }
 
     public updateProgressBar():void {

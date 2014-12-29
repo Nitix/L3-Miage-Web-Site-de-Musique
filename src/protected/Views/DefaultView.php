@@ -103,6 +103,8 @@ class DefaultView
 
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="js/notify.min.js"></script>
+
     <script src="js/recherche.js"></script>
     <script src="js/script.js"></script>
 

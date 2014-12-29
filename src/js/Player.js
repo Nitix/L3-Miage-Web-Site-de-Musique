@@ -3,11 +3,13 @@
  */
 ///<reference path="headers/jquery/jquery.d.ts" />
 ///<reference path="Playlist.ts" />
+///<reference path="headers/notify/notify.d.ts" />
 var Player = (function () {
     function Player(playlist) {
         this.isMusicSet = false;
         this.isPlaying = false;
         this.cursorUnlocked = false;
+        this.player = document.getElementById("player");
         this.audio = document.getElementById("audio");
         this.source = document.getElementsByTagName("source")[0];
         this.progress = document.getElementById("musicProgress");
@@ -19,6 +21,14 @@ var Player = (function () {
         $(this.audio).on('ended', function () {
             p.showPlayButton();
             p.next();
+        });
+        $(this.audio).on("error stalled", function (e) {
+            p.showPlayButton();
+            p.error(e);
+        });
+        $(this.source).on("error stalled", function (e) {
+            p.showPlayButton();
+            p.error(e);
         });
         $("#play").on('click', function () {
             p.togglePlay();
@@ -50,6 +60,7 @@ var Player = (function () {
     Player.prototype.setTrack = function (track) {
         if (track !== null) {
             this.source.src = track;
+            this.isMusicSet = true;
             this.audio.load();
             this.audio.pause();
             this.progress.setAttribute("value", "0");
@@ -70,7 +81,7 @@ var Player = (function () {
                 this.setTrack(track);
             }
             else {
-                console.log("NOTIFICATION aucune musique");
+                $(this.player).notify("Aucune musique en cours ou suivante", { elementPosition: 'top center', className: "warn" });
             }
         }
     };
@@ -83,14 +94,17 @@ var Player = (function () {
         if (track !== null)
             this.setTrack(track);
         else
-            console.log("NOTIFICATION pas de prochaine musique");
+            $(this.player).notify("Aucune musique suivante", { elementPosition: 'top center', className: "warn" });
     };
     Player.prototype.previous = function () {
         var track = this.playlist.getPreviousMusic();
         if (track !== null)
             this.setTrack(track);
         else
-            console.log("NOTIFICATION pas de précèdente musique");
+            $(this.player).notify("Aucune musique précèdente", { elementPosition: 'top center', className: "warn" });
+    };
+    Player.prototype.error = function (e) {
+        $(this.player).notify("Erreur lors du chargement de la musique", { elementPosition: 'top center', className: "error" });
     };
     Player.prototype.updateProgressBar = function () {
         if (this.isMusicSet) {
