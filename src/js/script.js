@@ -94,7 +94,7 @@ function chargerPlaylist(playlist_id, lancerApresChargement)
                  for(var i = 0; i < data.tracks.length; i++)
                  {
                      if (data.tracks[i].title != null) {
-                            var playBtn = '<img src="css/icons/play.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" data-position="'+i+'" onclick="lire(' + data.tracks[i].track_id + ',\'' + data.tracks[i].title + '\',\'' + data.tracks[i].name + '\','+data.tracks[i].artist_id+',\''+data.tracks[i].mp3_url+'\')"/>';
+                            var playBtn = '<img src="css/icons/play.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" data-position="'+i+'" onclick="lireDepuisPlaylist(' + data.tracks[i].track_id + ',\'' + data.tracks[i].title + '\',\'' + data.tracks[i].name + '\','+data.tracks[i].artist_id+',\''+data.tracks[i].mp3_url+'\','+i+')"/>';
 
                             var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" onclick="addToPlaylist(' + data.tracks[i].track_id + ',\'' + data.tracks[i].title + '\',\'' + data.tracks[i].name + '\','+data.tracks[i].artist_id+',\''+data.tracks[i].mp3_url+'\')"/>';
 

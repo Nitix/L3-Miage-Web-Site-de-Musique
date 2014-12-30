@@ -152,6 +152,19 @@ function lire(track_id, track_title, track_artist, artist_id, mp3_url) {
     p.play();
 }
 
+function lireDepuisPlaylist(track_id, track_title, track_artist, artist_id, mp3_url, position){
+    console.log("lecture : " + track_id+' '+ track_title+' '+ track_artist+ ' '+ artist_id+' '+ mp3_url);
+    console.log(p);
+    $("#playerInfos").empty();
+    $("#playerInfos").append(track_title+'<a class="trackList_artist" onclick="viewArtistPage('+artist_id+')">'+track_artist+'</a>');
+    
+    playlistCourante.playingTrack = position;
+    surlignerMusiqueEnCours();
+    
+    p.setTrack(mp3_url);
+    p.play();
+}
+
 function addToPlaylist(track_id, track_title, track_artist, artist_id, track_url) {
     console.log("ajout à une playlist de : " + track_id);
     //ouvrir la fenetre des playlists pour en choisir une ou ajouter la musique
