@@ -34,10 +34,12 @@ var Player = (function () {
             p.togglePlay();
         });
         $("#previousTrack").on('click', function () {
-            p.previous();
+            //p.previous();
+            previousTrack();
         });
         $("#nextTrack").on('click', function () {
-            p.next();
+            //p.next();
+            nextTrack();
         });
         $("#volume").on('change input', function () {
             p.setVolume();

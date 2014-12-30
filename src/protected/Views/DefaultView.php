@@ -82,7 +82,7 @@ class DefaultView
             </ul>
         </div>
         <div id="player">
-            <div>
+            <div id="playerUI">
                 <audio id="audio"><source src="music.mp3" type="audio/mpeg"></audio>
                 <img id="previousTrack" alt="Précédent" class="iconBtn" src="css/icons/previous.png" />
                 <img id="play" alt="Play" class="iconBtn" src="css/icons/play.png" />
@@ -97,6 +97,9 @@ class DefaultView
                         <input id="volume" min="0" max="100" step="1" value="100" type="range"  />
                     </span>
                 </span>
+            </div>
+            <div id="playerInfos">
+            
             </div>
         </div>
     </footer>

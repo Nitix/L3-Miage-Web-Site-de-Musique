@@ -120,7 +120,7 @@ function viewArtistPage(artist_id) {
              
                 if (data.musiques[i].title != null) {
                     console.log(data.musiques[i]);
-                    var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\','+data.musiques[i].artist_id+',\''+data.musiques[i].mp3_url+'\')"/>';
+                    var playBtn = '<img src="css/icons/play.png " id="playTrack' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="lire(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.artiste.name + '\','+data.musiques[i].artist_id+',\''+data.musiques[i].mp3_url+'\')"/>';
 
                     var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " id="addToPlaylist' + data.musiques[i].track_id + '" class="iconBtn" data-id="' + data.musiques[i].track_id + '" onclick="addToPlaylist(' + data.musiques[i].track_id + ',\'' + data.musiques[i].title + '\',\'' + data.musiques[i].name + '\','+data.musiques[i].artist_id+',\''+data.musiques[i].mp3_url+'\')"/>';
 
@@ -129,7 +129,7 @@ function viewArtistPage(artist_id) {
                     var artist = "";
 
                     if (data.musiques[i].name != null) {
-                        artist = '<a class="trackList_artist" onclick="viewArtistPage(' + data.musiques[i].artist_id + ')"></a>';
+                        artist = '<a class="trackList_artist" onclick="viewArtistPage(' + data.musiques[i].artist_id + ')">'+data.musiques[i].name+'</a>';
                     }
 
                     $("#trackList").append('<li><div class="trackActions">' + favBtn + addToPlaylistBtn + playBtn + '</div><div class="trackInfos">' + data.musiques[i].title + artist + '</div></li>');
@@ -143,6 +143,11 @@ function viewArtistPage(artist_id) {
 function lire(track_id, track_title, track_artist, artist_id, mp3_url) {
     console.log("lecture : " + track_id+' '+ track_title+' '+ track_artist+ ' '+ artist_id+' '+ mp3_url);
     console.log(p);
+    $("#playerInfos").empty();
+    $("#playerInfos").append(track_title+'<a class="trackList_artist" onclick="viewArtistPage('+artist_id+')">'+track_artist+'</a>');
+    
+    
+    
     p.setTrack(mp3_url);
     p.play();
 }
@@ -229,7 +234,7 @@ function addToThisPlaylist(track_id, track_title, track_artist, artist_id, track
                  //si on vient de modifier une playlist actuellement en cours de lecture, on la met a jour dans le volet
                  if($("#playlistInfos").attr("data-playlist-id") == playlist_id)
                  {
-                     chargerPlaylist(playlist_id);
+                     chargerPlaylist(playlist_id, false);
                  }
                  
                  alert("La musique -"+track_title+"- a bien été ajoutée à cette playlist");

@@ -225,7 +225,8 @@ left: 0;
     height: 90px;
     position: relative;
 }
-#player > div {
+
+#player > #playerUI {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -233,7 +234,37 @@ left: 0;
     right: 0;
     width: 50%;
     height: 40%;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+
+#player > #playerInfos {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 50%;
+    height: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+#player > #playerInfos > .trackList_artist {
+    transition: color 0.3s;
+    margin-left: 10px;
+    font-size: 14px;
+    color: gray;
+    cursor: pointer;
+    overflow: hidden;
+    height: 19px;
+}
+
+#player > #playerInfos > .trackList_artist:hover {
+    color: #B1FF00;
+    transition: color 0.3s;
 }
 
 #playlistsPopup {
