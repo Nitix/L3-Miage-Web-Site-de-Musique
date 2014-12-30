@@ -20,7 +20,8 @@ var Player = (function () {
         this.playlist = playlist;
         $(this.audio).on('ended', function () {
             p.showPlayButton();
-            p.next();
+            //p.next();
+            nextTrack();
         });
         $(this.audio).on("error stalled", function (e) {
             p.showPlayButton();
@@ -77,14 +78,18 @@ var Player = (function () {
             this.showPauseButton();
         }
         else {
+            
             this.isMusicSet = true;
+            nextTrack();
+            
+            /*
             var track = this.playlist.getNextMusic();
             if (track !== null) {
                 this.setTrack(track);
             }
             else {
                 $(this.player).notify("Aucune musique en cours ou suivante", { elementPosition: 'top center', className: "warn" });
-            }
+            }*/
         }
     };
     Player.prototype.pause = function () {
