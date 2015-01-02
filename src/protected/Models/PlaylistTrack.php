@@ -116,4 +116,26 @@ class PlaylistTrack
         return $tab;
     }
 
+
+    public static function insertMultiples($tracks, $playlist_id){
+
+        $query = "INSERT INTO playlists_tracks (playlist_id, track_id, position)  VALUES";
+
+        $params = array();
+        $position = 0;
+        foreach($tracks as $track){
+            $query .= " (?, ?, ?),";
+            $params[] = $playlist_id;
+            $params[] = $track['track_id'];
+            $params[] = $position;
+            $position++;
+        }
+        $query = rtrim($query, ',');
+
+        $db = Base::getConnection();
+        $stmt = $db->prepare($query);
+
+        $stmt->execute($params);
+
+    }
 } 

@@ -62,7 +62,7 @@ class FrontController
                         }
                     } else {
                         if ($instance->hasRightAccess("index")) {
-                            $instance->$action($instance->index());
+                            $instance->index();
                         } else {
                             $instance->accessDenied();
                         }

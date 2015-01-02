@@ -269,7 +269,7 @@ class User
 
         $stmt = $db->prepare("SELECT * FROM users WHERE user_id=:id ;");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-        $stmt->execute(array($id));
+        $stmt->execute();
 
         $response = $stmt->fetch();
 

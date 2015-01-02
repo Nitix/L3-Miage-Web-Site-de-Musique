@@ -9,14 +9,10 @@ class BaseController implements Controller
 {
 
     private static $actions = array(
-        'test',
-        'autocomplete'
+        'autocomplete',
+        'recherche',
+        'getArtistPage'
     );
-
-    public function test()
-    {
-        echo "ceci est un test";
-    }
 
     public function autocomplete()
     {

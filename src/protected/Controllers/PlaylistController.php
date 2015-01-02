@@ -3,6 +3,11 @@
 
 namespace Controllers;
 
+use Models\Playlist;
+use Models\PlaylistTrack;
+use Models\Track;
+use Models\User;
+
 
 /**
  * Control the interaction with the user
@@ -15,9 +20,12 @@ class PlaylistController implements Controller
      * @var array List of actions that can do the client
      */
     private $actions = array(
-        
         'getPlaylists',
-        'addPlaylist'
+        'addPlaylist',
+        'getPlaylist',
+        'delPlaylist',
+        'addTrackToPlaylist',
+        'delTrackFromPlaylist',
     );
 
     /**
@@ -25,7 +33,6 @@ class PlaylistController implements Controller
      */
     function index()
     {
-        
     }
     
     function getPlaylists()
@@ -252,7 +259,7 @@ class PlaylistController implements Controller
      */
     function hasAction($action)
     {
-        return array_key_exists($action, $this->actions);
+        return in_array($action, $this->actions);
     }
 
     /**
@@ -274,5 +281,28 @@ class PlaylistController implements Controller
         echo json_encode(array("error" => "403"));
     }
 
- 
+
+    /**
+     * Save playlist to the db
+     * Called when the user is connected
+     */
+    function saveVisitorPlaylistToDatabase(){
+        $temp = array();
+        foreach($_SESSION["playlists"] as $raw_playlist){
+            try {
+                $playlist = new Playlist();
+                $playlist->setPlaylistName($raw_playlist['playlist_name']);
+                $playlist->setUserId(User::getCurrentUser()->getId());
+                $playlist->insert();
+                $position = 0;
+                if (isset($raw_playlist['tracks'])) {
+                    PlaylistTrack::insertMultiples($raw_playlist['tracks'], $playlist->getPlaylistId());
+                }
+                $temp[$playlist->getPlaylistId()] = $raw_playlist;
+            }catch (\Exception $e){
+
+            }
+        }
+        $_SESSION["playlists"] = $temp;
+    }
 } 

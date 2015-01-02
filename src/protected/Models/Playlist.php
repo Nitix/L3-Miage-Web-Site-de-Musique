@@ -98,7 +98,7 @@ class Playlist
      */
     public static function isValidPlaylistName($name)
     {
-        return isset($name) && strlen($name) > 1 && strlen($name) < 60;
+        return strlen($name) > 1 && strlen($name) < 60;
     }
 
     /**
@@ -193,7 +193,7 @@ class Playlist
     {
         $db = Base::getConnection();
 
-        if (self::isValidPlaylistName($this->playlist_name) || !User::findByID($this->user_id)) {
+        if (!self::isValidPlaylistName($this->playlist_name) || !User::findByID($this->user_id)) {
             throw new \InvalidArgumentException();
         }
 
@@ -230,4 +230,20 @@ class Playlist
         $stmt->closeCursor();
     }
 
+    /**
+     * Delete the playlist in the database
+     * @throws \InvalidArgumentException thrown when information is missing
+     * @throws \PDOException
+     */
+    public function delete()
+    {
+        $db = Base::getConnection();
+
+        $stmt = $db->prepare("DELETE FROM playlists WHERE playlist_id=:playlist_id;");
+        $stmt->bindParam(":playlist_id", $this->playlist_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->closeCursor();
+    }
 }

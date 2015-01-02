@@ -4,6 +4,7 @@
 namespace Controllers;
 
 use Models\User;
+use Controllers\PlaylistController;
 
 /**
  * Control the interaction with the user
@@ -20,8 +21,12 @@ class UserController implements Controller
         'register' => false,
         'update' => true,
         'view' => false,
+        'getInformation' => false,
         'getPlaylists' => true,
-        'addPlaylist' => true
+        'addPlaylist' => true,
+        'getPlaylistsInSession' => true,
+        'addPlaylistInSession' => true,
+
     );
 
     /**
@@ -149,6 +154,8 @@ class UserController implements Controller
         if (isset($_POST["username"]) && isset($_POST["password"])) {
             $logged = User::login($_POST["username"], $_POST["password"]);
             if ($logged) {
+                $playlistController = new PlaylistController();
+                $playlistController->saveVisitorPlaylistToDatabase();
                 echo json_encode(array("status" => "0"));
             } else {
                 echo json_encode(array(
@@ -214,6 +221,8 @@ class UserController implements Controller
                 $user->setIsVisitor(false);
                 $user->insert();
                 $_SESSION['user'] = $user;
+                $playlistController = new PlaylistController();
+                $playlistController->saveVisitorPlaylistToDatabase();
                 echo json_encode(array("status" => 0));
             }else {
                 echo json_encode(array(
