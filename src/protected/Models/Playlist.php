@@ -40,7 +40,7 @@ class Playlist
      * Set the playlist id
      * @param int $playlist_id
      */
-    private function setPlaylistId($playlist_id)
+    public function setPlaylistId($playlist_id)
     {
         $this->playlist_id = $playlist_id;
     }
@@ -85,9 +85,10 @@ class Playlist
      */
     public function setUserId($user_id)
     {
-        if (!User::findByID($user_id)) {
+        /* 
+        //if (!User::findByID($user_id)) {
             throw new \InvalidArgumentException();
-        }
+        }*/
         $this->user_id = $user_id;
     }
 
@@ -192,8 +193,8 @@ class Playlist
     public function insert()
     {
         $db = Base::getConnection();
-
-        if (self::isValidPlaylistName($this->playlist_name) || !User::findByID($this->user_id)) {
+        //var_dump(User::findByID($this->user_id));
+        if (!self::isValidPlaylistName($this->playlist_name) || User::findByID($this->user_id) == false) {
             throw new \InvalidArgumentException();
         }
 
@@ -201,10 +202,12 @@ class Playlist
         $stmt->bindParam(":user_id", $this->user_id, PDO::PARAM_INT);
         $stmt->bindParam(":name", $this->playlist_name, PDO::PARAM_STR);
 
-        $stmt->execute();
+        $ok = $stmt->execute();
 
         $this->playlist_id = $db->LastInsertID();
         $stmt->closeCursor();
+        
+        return $ok;
     }
 
     /**

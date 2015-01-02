@@ -122,7 +122,7 @@ class Track
 
         $stmt = $db->prepare("SELECT * FROM tracks WHERE track_id=:id ;");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-        $stmt->execute(array($id));
+        $stmt->execute();
 
         $response = $stmt->fetch();
 
@@ -175,7 +175,7 @@ class Track
 
         $stmt = $db->prepare("SELECT * FROM tracks WHERE title=:title ;");
         $stmt->bindParam(":title", $title, PDO::PARAM_INT);
-        $stmt->execute(array($title));
+        $stmt->execute();
 
         $response = $stmt->fetch();
 

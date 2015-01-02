@@ -3,7 +3,9 @@
 
 namespace Controllers;
 
-
+use Models\Playlist;
+use Models\PlaylistTrack;
+use Models\User;
 /**
  * Control the interaction with the user
  * @package Controllers\User
@@ -99,6 +101,32 @@ class PlaylistController implements Controller
         {
             //sinon,
             $npl = array();
+            $npl["playlist_id"] = null;
+            $npl["playlist_name"] = $_GET["newPlaylistName"];
+            
+            //si l'utilisateur est loggé, on enregistre la modification en base
+            if(!User::getCurrentUser()->isVisitor())
+            {
+                //ajouter la playlist en base
+                $newpl = new Playlist();
+                $newpl->setPlaylistName($npl["playlist_name"]);
+                $newpl->setUserId(intval($_SESSION["user"]->getId()));
+                
+                try
+                {
+                    $newpl->insert();
+                }
+                catch(PDOException $err)
+                {
+                    echo json_encode(false);
+                    //throw $err;
+                    return;
+                }
+                
+                
+                
+                $npl["playlist_id"] = $newpl->getPlaylistId();
+            }
             
             //si la il n'y avait aucune playlist avant, on créé la premiere
             if(count($_SESSION["playlists"]) == 0)
@@ -113,18 +141,15 @@ class PlaylistController implements Controller
                 $id = $_SESSION["playlists_lastid"];
             }
             
-            //on créé la nouvelle playlist
-            $npl["playlist_id"] = $id;
-            $npl["playlist_name"] = $_GET["newPlaylistName"];
+            //si l'utilisateur n'est pas connecté, on créé la nouvelle playlist avec l'autoincrement de la SESSION
+            if($npl["playlist_id"] == null)
+                $npl["playlist_id"] = $id;
+            
             
             //puis on ajoute la nouvelle playlist
             $_SESSION["playlists"][] = $npl;
             
-            //si l'utilisateur est loggé, on enregistre la modification en base
-            if(isset($_SESSION["user"]))
-            {
-                //ajouter la playlist en base
-            }
+            
             
             //on retourne la nouvelle liste de playlist obtenue
             echo $this->getPlaylists();
@@ -142,9 +167,23 @@ class PlaylistController implements Controller
         {
             if($pl["playlist_id"] == $_GET["id"])
             {
-                if(isset($_SESSION["user"]))
+                if(!User::getCurrentUser()->isVisitor())
                 {
-                    //supprimer la playlist en base
+                    $play = new Playlist();
+                    $play->setPlaylistId($pl["playlist_id"]);
+                    $play->setPlaylistName($pl["playlist_name"]);
+                    $play->setUserId($_SESSION["user"]->getId());
+                    
+                    try
+                    {
+                        $play->delete();
+                    }
+                    catch(PDOException $err)
+                    {
+                        echo json_encode(false);
+                        //throw $err;
+                        return;
+                    }
                 }
                 $res = true;
             }
@@ -186,12 +225,30 @@ class PlaylistController implements Controller
                 $track["artist_id"] = $_GET["artid"];
                 $track["mp3_url"] = $_GET["trurl"];
                 
-                $_SESSION["playlists"][$plnum]["tracks"][] = $track;
-                
-                if(isset($_SESSION["user"]))
+                if(!User::getCurrentUser()->isVisitor())
                 {
                     //ajoute la musique a la playlist en base
+                    $pltr = new PlaylistTrack();
+                    $pltr->setPlaylistId($playlist_id);
+                    $pltr->setTrackId($track_id);
+                    
+                    $pos = count($_SESSION["playlists"][$plnum]["tracks"]);
+                    $pltr->setPosition($pos);
+                    
+                    try
+                    {
+                        $pltr->insert();
+                    }
+                    catch(PDOException $err)
+                    {
+                        echo json_encode(false);
+                        //throw $err;
+                        return;
+                    }
                 }
+                
+                $_SESSION["playlists"][$plnum]["tracks"][] = $track;
+                
                 break;
             }
         }
@@ -212,6 +269,25 @@ class PlaylistController implements Controller
             //si c'est la bonne playlist,
             if($pl["playlist_id"] == $playlist_id)
             {
+                //si l'user est connecté, on sauvegarde la modif en base
+                if(!User::getCurrentUser()->isVisitor())
+                {
+                    $pltr = new PlaylistTrack();
+                    $pltr->setPlaylistId($playlist_id);
+                    $pltr->setPosition($position);
+                    
+                    try
+                    {
+                        $pltr->delete();
+                    }
+                    catch(PDOException $err)
+                    {
+                        echo json_encode(false);
+                        //throw $err;
+                        return;
+                    }
+                }
+                
                 //on sauvegarde toutes les musiques dans une playlist temporaire, sauf celle concernée par la suppression
                 foreach($_SESSION["playlists"][$plnum]["tracks"] as $trpos => $tr)
                 {
@@ -231,12 +307,7 @@ class PlaylistController implements Controller
                     $_SESSION["playlists"][$plnum]["tracks"][] = $tr;
                 }
                 
-                //si l'user est connecté, on sauvegarde la modif en base
-                if(isset($_SESSION["user"]))
-                {
-                    //suppression de tous les tracks de la playlist en base
-                    //insertion de toutes les tracks dans la playlist en base
-                }
+                
                 
                 break;
             }

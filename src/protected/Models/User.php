@@ -269,8 +269,8 @@ class User
 
         $stmt = $db->prepare("SELECT * FROM users WHERE user_id=:id ;");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-        $stmt->execute(array($id));
-
+        $ok = $stmt->execute();
+        //var_dump($id);
         $response = $stmt->fetch();
 
         if ($response) {
@@ -328,6 +328,7 @@ class User
             return $_SESSION['user'];
         } else {
             return new User();
+            
         }
     }
 
@@ -349,6 +350,10 @@ class User
                 $user->update();
             }
             $_SESSION['user'] = $user;
+            /*
+            $_SESSION['user']["user_id"] = $user->getId();
+            $_SESSION['user']["user_name"] = $user->getUsername();
+            $_SESSION['user']["user_mail"] = $user->getEmail();*/
             return true;
         } else {
             return false;

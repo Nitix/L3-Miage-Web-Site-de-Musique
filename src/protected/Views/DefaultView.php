@@ -53,6 +53,7 @@ class DefaultView
             <button id="buttonConnexion" onclick="DivConnexion()" class="toolbarBtn">Connexion</button>
             <?php endif; ?>
             <button id="usernameProfile" onclick="profil()" class="toolbarBtn"><?php  echo "Bienvenue "; if (User::getCurrentUser()->isVisitor()) echo "Visiteur"; else  echo User::getCurrentUser()->getUsername(); ?></button>
+            <button id="buttonDeconnexion" onclick="disconnect()" class="toolbarBtn" <?php if(User::getCurrentUser()->isVisitor()) echo "hidden"; ?>>Deconnexion</button>
 
             <div class="toolbarSeparator"></div>
 
