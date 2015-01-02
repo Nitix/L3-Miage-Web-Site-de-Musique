@@ -83,7 +83,7 @@ class PlaylistController implements Controller
         foreach($_SESSION["playlists"] as $plnum => $pl)
         {
             
-            if($pl["playlist_name"] == $_POST["newPlaylistName"])
+            if($pl["playlist_name"] == $_GET["newPlaylistName"])
             {
                 $alreadyExists = true;
                 break;
