@@ -351,6 +351,7 @@ function register(){
             $("#usernameProfile").html("Bienvenue " + $("#username").val());
             $("#buttonConnexion").hide();
             $("#buttonInscription").hide();
+            $("#buttonDeconnexion").show();
             $("#mainDiv").html("Vous êtes maintenant inscrit");
         }else{
             for(var err in msg.errors){
