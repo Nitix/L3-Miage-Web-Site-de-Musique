@@ -19,7 +19,7 @@ function afficherPlaylists()
 {
     $("#mainDiv").empty();
     $("#mainDiv").append('<h3>Vos playlists</h3>');
-    $("#mainDiv").append('<ul id="userPlaylists" class="trackList"></ul>');
+    $("#mainDiv").append('<ul id="userPlaylistsInMain" class="trackList"></ul>');
     
     $.ajax({
         url: 'index.php', //url du script PHP qu'on appelle
@@ -31,7 +31,7 @@ function afficherPlaylists()
             if(data.length == 0)
              {
                  //aucune playlist
-                 $("#userPlaylists").append("Aucune playlist");
+                 $("#userPlaylistsInMain").append("Aucune playlist");
                  
              }
              else
@@ -41,7 +41,9 @@ function afficherPlaylists()
                  
                  for(var i=0; i < data.length ; i++)
                  {
-                     $("#userPlaylists").append('<li class="playLi" data-name="'+data[i].playlist_name+'"><p onclick="chargerPlaylist('+data[i].playlist_id+', true)">'+data[i].playlist_name+'</p><img src="css/icons/bin.png" class="iconBtn" onclick="delPlaylist('+data[i].playlist_id+')"/></li>');
+                     
+                     
+                     $("#userPlaylistsInMain").append('<li class="playLi" id="playLiIdInMain'+data[i].playlist_id+'" data-name="'+data[i].playlist_name+'"><p onclick="chargerPlaylist('+data[i].playlist_id+', true)">'+data[i].playlist_name+'</p><img src="css/icons/bin.png" class="iconBtn" onclick="delPlaylist('+data[i].playlist_id+', \'playLiIdInMain'+data[i].playlist_id+'\')"/></li>');
                  }
                  
              }
@@ -49,22 +51,41 @@ function afficherPlaylists()
     });
 }
 
-function delPlaylist(playlist_id){
+function delPlaylist(playlist_id, elementId){
     
-    $.ajax({
-         url : 'index.php', //url du script PHP qu'on appelle
-         type : 'GET', // Le type de la requête HTTP, ici  GET
-         data : 'c=guest&a=delPlaylist&id='+playlist_id,
-         dataType : 'JSON', //on demande du JSON en retour
-         success: function(data){
-             
-             if(data == true)
-             {
-                afficherPlaylists();
+    if(playlistCourante.playlist_id == playlist_id && playlistCourante.playingTrack != null)
+    {
+        $("#"+elementId).notify("impossible de supprimer une playlist en cours de lecture !");
+    }
+    else
+    {
+        $.ajax({
+             url : 'index.php', //url du script PHP qu'on appelle
+             type : 'GET', // Le type de la requête HTTP, ici  GET
+             data : 'c=guest&a=delPlaylist&id='+playlist_id,
+             dataType : 'JSON', //on demande du JSON en retour
+             success: function(data){
+                 
+                 if(data == true)
+                 {
+                    afficherPlaylists();
+                    
+                    if(playlist_id == playlistCourante.playlist_id)
+                    {
+                        playlistCourante.playlist_id = null;
+                        playlistCourante.playlist_name = null;
+                        playlistCourante.tracks = null;
+                        
+                        $("#playlistInfos").empty();
+                        $("#playlistInfos").attr("data-playlist-id", -1);
+                        
+                        var tracks = $("#voletPlaylist").children(".trackList");
+                        tracks.empty();
+                    }
+                 }
              }
-         }
-     });
-    
+         });
+    }
 }
 
 function chargerPlaylist(playlist_id, lancerApresChargement)
@@ -94,28 +115,34 @@ function chargerPlaylist(playlist_id, lancerApresChargement)
                  for(var i = 0; i < data.tracks.length; i++)
                  {
                      if (data.tracks[i].title != null) {
-                            var playBtn = '<img src="css/icons/play.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" data-position="'+i+'" onclick="lireDepuisPlaylist(' + data.tracks[i].track_id + ',\'' + data.tracks[i].title + '\',\'' + data.tracks[i].name + '\','+data.tracks[i].artist_id+',\''+data.tracks[i].mp3_url+'\','+i+')"/>';
+                         
+                         title_esc = data.tracks[i].title.replace(/'/g, "\\'");
+                         name_esc = data.tracks[i].name.replace(/'/g, "\\'");
+                         url_esc = data.tracks[i].mp3_url.replace(/'/g, "\\'");
+                         
+                            var playBtn = '<img src="css/icons/play.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" data-position="'+i+'" onclick="lireDepuisPlaylist(' + data.tracks[i].track_id + ',\'' + title_esc + '\',\'' + name_esc + '\','+data.tracks[i].artist_id+',\''+url_esc+'\','+i+')"/>';
 
-                            var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" onclick="addToPlaylist(' + data.tracks[i].track_id + ',\'' + data.tracks[i].title + '\',\'' + data.tracks[i].name + '\','+data.tracks[i].artist_id+',\''+data.tracks[i].mp3_url+'\')"/>';
+                            var addToPlaylistBtn = '<img src="css/icons/addToPlaylist.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" onclick="addToPlaylist(' + data.tracks[i].track_id + ',\'' + title_esc + '\',\'' + name_esc + '\','+data.tracks[i].artist_id+',\''+url_esc+'\')"/>';
 
                             var favBtn = '<img src="css/icons/fav.png " class="iconBtn" data-id="' + data.tracks[i].track_id + '" onclick="addToFavs(' + data.tracks[i].track_id + ')"/>';
+                            var delBtn = '<img src="css/icons/bin.png" class="iconBtn" data-id="'+data.tracks[i].track_id+'" data-position="'+i+'" onclick="delFromPlaylist('+data.tracks[i].track_id+','+data.playlist_id+','+i+',\'trackLiInPlaylist'+i+'\')"/>';
 
                             var artist = "";
 
                             if (data.tracks[i].name != null) {
-                                artist = '<a class="trackList_artist" onclick="viewArtistPage(' + data.tracks[i].artist_id + ')">' + data.tracks[i].name + '</a>';
+                                artist = '<a class="trackList_artist" onclick="viewArtistPageFromPlaylist(' + data.tracks[i].artist_id + ')">' + data.tracks[i].name + '</a>';
                             }
 
-                            tracks.append('<li data-track-id="'+data.tracks[i].track_id+'"><div class="trackActions">' + favBtn + addToPlaylistBtn + playBtn + '</div><div class="trackInfos">' + data.tracks[i].title + artist + '</div></li>');
+                            tracks.append('<li id="trackLiInPlaylist'+i+'" data-track-id="'+data.tracks[i].track_id+'" data-position="'+i+'"><div class="trackActions">' +delBtn+ favBtn + addToPlaylistBtn + playBtn + '</div><div class="trackInfos">' + data.tracks[i].title + artist + '</div></li>');
                         }
                  }
                  
                  if(lancerApresChargement)
                  {
                      playlistCourante.playingTrack = 0;
-                     
-                     lire(data.tracks[0].track_id,data.tracks[0].title,data.tracks[0].name,data.tracks[0].artist_id,data.tracks[0].mp3_url);
                      console.log(playlistCourante);
+                     lireDepuisPlaylist(data.tracks[0].track_id,data.tracks[0].title,data.tracks[0].name,data.tracks[0].artist_id,data.tracks[0].mp3_url, 0);
+                    
                  }
                  
                  surlignerMusiqueEnCours();
@@ -124,18 +151,57 @@ function chargerPlaylist(playlist_id, lancerApresChargement)
     });
 }
 
+function delFromPlaylist(track_id, playlist_id, position, elementId)
+{
+    if(playlistCourante.playlist_id == playlist_id && playlistCourante.playingTrack == position)
+    {
+        console.log(elementId);
+        $("#"+elementId).notify("Impossible de retirer cette musique de la playlist, car elle est en cours de lecture");
+    }
+    else
+    {
+        $.ajax({
+         url : 'index.php', //url du script PHP qu'on appelle
+         type : 'GET', // Le type de la requête HTTP, ici  GET
+         data : 'c=guest&a=delTrackFromPlaylist&pos='+position+'&plid='+playlist_id,
+         dataType : 'JSON', //on demande du JSON en retour
+         success: function(data){
+
+            //si la modification a été faite avec succes
+             if(data != false)
+             {
+                 //si on vient de modifier une playlist en cours de lecture, on la met a jour dans le volet
+                 if(playlistCourante.playlist_id == playlist_id)
+                 {
+                     //si on a supprimé une musique positionnée avant celle en cours de lecture, on decalle playlistCourante.playingTrack de -1
+                     if(position < playlistCourante.playingTrack)
+                     {
+                         playlistCourante.playingTrack--;
+                     }
+                     
+                     chargerPlaylist(playlist_id, false);
+                 }
+                 
+             }
+         }
+     });
+    }
+}
+
 function surlignerMusiqueEnCours()
 {
     var count = 0;
-    $("#voletPlaylist").children(".trackList").children().each(function(){
+    $("#voletPlaylist").children(".trackList").children("li").each(function(){
         if(count == playlistCourante.playingTrack)
         {
+            console.log(count+"i"+$(this).attr("data-position"));
             $(this).css( "border-style", "solid" );
             $(this).css( "border-width", "1px" );
             $(this).css( "border-color", "#B1FF00" );
         }
         else
         {
+            
             $(this).css( "border-style", "none" );
             $(this).css( "border-width", "0px" );
             $(this).css( "border-color", "#B1FF00" );
@@ -155,7 +221,7 @@ function nextTrack()
     
     var index = playlistCourante.playingTrack;
     surlignerMusiqueEnCours()
-    lire(playlistCourante.tracks[index].track_id, playlistCourante.tracks[index].title, playlistCourante.tracks[index].name, playlistCourante.tracks[index].artist_id, playlistCourante.tracks[index].mp3_url);
+    lireDepuisPlaylist(playlistCourante.tracks[index].track_id, playlistCourante.tracks[index].title, playlistCourante.tracks[index].name, playlistCourante.tracks[index].artist_id, playlistCourante.tracks[index].mp3_url, playlistCourante.playingTrack);
     
 }
 
@@ -170,7 +236,7 @@ function previousTrack()
     
     var index = playlistCourante.playingTrack;
     surlignerMusiqueEnCours()
-    lire(playlistCourante.tracks[index].track_id, playlistCourante.tracks[index].title, playlistCourante.tracks[index].name, playlistCourante.tracks[index].artist_id, playlistCourante.tracks[index].mp3_url);
+    lireDepuisPlaylist(playlistCourante.tracks[index].track_id, playlistCourante.tracks[index].title, playlistCourante.tracks[index].name, playlistCourante.tracks[index].artist_id, playlistCourante.tracks[index].mp3_url, playlistCourante.playingTrack);
     
 }
 

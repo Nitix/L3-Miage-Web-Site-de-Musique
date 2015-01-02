@@ -297,6 +297,24 @@ left: 0;
     cursor: pointer;
 }
 
+#userPlaylistsInMain{
+    overflow: auto;
+    display: block;
+    height: 90%;
+}
+
+#userPlaylistsInMain > .playLi > img {
+    float: right;
+    height: 18px;
+}
+
+#userPlaylistsInMain > .playLi > p {
+    margin: 0px;
+    padding: 0px;
+    display: inline-block;
+    cursor: pointer;
+}
+
 #createPlaylistLi{
     height: 30px;
     cursor: pointer;

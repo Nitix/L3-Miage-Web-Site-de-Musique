@@ -71,14 +71,11 @@ class DefaultView
 
     <footer>
         <div id="entetePlaylist"><img src="css/icons/voletUp.png" data-src-up="css/icons/voletUp.png" data-src-down="css/icons/voletDown.png" class="iconBtn" id="entetePlaylistBtn">
-        <div id="playlistInfos">Playlist 01</div>        
+        <div id="playlistInfos"></div>        
         </div>
         <div id="voletPlaylist">
             <ul class="trackList">
-                <li>aaaaaa</li>
-                <li>aaaaaa</li>
-                <li>aaaaaa</li>
-                <li>aaaaaa</li>
+               
             </ul>
         </div>
         <div id="player">

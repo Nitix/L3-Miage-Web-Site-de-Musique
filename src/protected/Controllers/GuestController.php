@@ -202,6 +202,50 @@ class GuestController implements Controller
         echo json_encode(true);
     }
     
+    function delTrackFromPlaylist()
+    {
+        $position = $_GET["pos"];
+        $playlist_id = $_GET["plid"];
+        $temp = array();
+        
+        //on recherche la playlist concernée par la suppression de musique
+        foreach($_SESSION["playlists"] as $plnum => $pl)
+        {
+            //si c'est la bonne playlist,
+            if($pl["playlist_id"] == $playlist_id)
+            {
+                //on sauvegarde toutes les musiques dans une playlist temporaire, sauf celle concernée par la suppression
+                foreach($_SESSION["playlists"][$plnum]["tracks"] as $trpos => $tr)
+                {
+                    if($trpos != $position)
+                    {
+                        $temp[] = $tr;
+                    }
+                }
+                
+                //on nettoye la playlist en SESSION
+                unset($_SESSION["playlists"][$plnum]["tracks"]);
+                $_SESSION["playlists"][$plnum]["tracks"] = array();
+                
+                //et on reconstruit cette playlist en SESSION
+                foreach($temp as $trpos => $tr)
+                {
+                    $_SESSION["playlists"][$plnum]["tracks"][] = $tr;
+                }
+                
+                //si l'user est connecté, on sauvegarde la modif en base
+                if(isset($_SESSION["user"]))
+                {
+                    //suppression de tous les tracks de la playlist en base
+                    //insertion de toutes les tracks dans la playlist en base
+                }
+                
+                break;
+            }
+        }
+        
+        echo json_encode(true);
+    }
 
     /**
      * Check if the controller has the action
