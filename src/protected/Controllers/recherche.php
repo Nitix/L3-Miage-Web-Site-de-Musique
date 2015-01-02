@@ -12,7 +12,7 @@ $requestA = mysql_query($queryA);
 $resA = mysql_fetch_assoc($requestA);
 
 $arrayT = array();
-$arrayA = array();
+$arrayA = arra();
 
 while($resT != false)
 {

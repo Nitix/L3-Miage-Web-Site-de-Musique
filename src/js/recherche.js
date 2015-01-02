@@ -225,7 +225,7 @@ function getPlaylistsInSession(track_id, track_title, track_artist, artist_id, t
     $.ajax({
          url : 'index.php', //url du script PHP qu'on appelle
          type : 'GET', // Le type de la requête HTTP, ici  GET
-         data : 'c=guest&a=getPlaylists',
+         data : 'c=playlist&a=getPlaylists',
          dataType : 'JSON', //on demande du JSON en retour
          success: function(data){
 
@@ -261,7 +261,7 @@ function addToThisPlaylist(track_id, track_title, track_artist, artist_id, track
     $.ajax({
          url : 'index.php', //url du script PHP qu'on appelle
          type : 'GET', // Le type de la requête HTTP, ici  GET
-         data : 'c=guest&a=addTrackToPlaylist&trid='+track_id+'&trtitle='+track_title+'&trart='+track_artist+'&artid='+artist_id+'&trurl='+track_url+'&plid='+playlist_id,
+         data : 'c=playlist&a=addTrackToPlaylist&trid='+track_id+'&trtitle='+track_title+'&trart='+track_artist+'&artid='+artist_id+'&trurl='+track_url+'&plid='+playlist_id,
          dataType : 'JSON', //on demande du JSON en retour
          success: function(data){
 
@@ -305,7 +305,7 @@ function delPlaylistInPopup(track_id, track_title, track_artist, artist_id, trac
         $.ajax({
              url : 'index.php', //url du script PHP qu'on appelle
              type : 'GET', // Le type de la requête HTTP, ici  GET
-             data : 'c=guest&a=delPlaylist&id='+playlist_id,
+             data : 'c=playlist&a=delPlaylist&id='+playlist_id,
              dataType : 'JSON', //on demande du JSON en retour
              success: function(data){
                  
@@ -391,7 +391,7 @@ function addNewPlaylistInPopup(track_id, track_title, track_artist, artist_id, t
                     $.ajax({
                          url : 'index.php', //url du script PHP qu'on appelle
                          type : 'GET', // Le type de la requête HTTP, ici  GET
-                         data : 'c=guest&a=addPlaylist&newPlaylistName='+playlistName,
+                         data : 'c=playlist&a=addPlaylist&newPlaylistName='+playlistName,
                          dataType : 'JSON', //on demande du JSON en retour
                          success: function(data){
                             if(data != false)
