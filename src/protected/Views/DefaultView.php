@@ -4,6 +4,8 @@
 //FIXME A faire au propre, en séparant les différentes parties
 namespace Views;
 
+use Models\User;
+
 class DefaultView
 {
 
@@ -14,7 +16,7 @@ class DefaultView
 
     public function display()
     {
-        
+
     }
 } 
 
@@ -36,51 +38,50 @@ class DefaultView
 <title>10H - Site de musique</title>
 </head>
 <body>
-
     <header>
     <h1> 10H </h1>(lolilol)
     </header>
 
     <nav>
-        
+
             <input value="" type="text" id="recherche"/>
             <img src="css/icons/search.png " alt="loupe" class="iconBtn" id="btnRecherche"/>
-            
-            
-            
-            
-            <button onclick="DivInscription()" class="toolbarBtn">Inscription</button>
-            <button onclick="DivConnexion()" class="toolbarBtn">Connexion</button>
-            <button onclick="profil()" class="toolbarBtn">User</button>
-            
+
+
+            <?php if (User::getCurrentUser()->isVisitor()) : ?>
+            <button id="buttonInscription" onclick="DivInscription()" class="toolbarBtn">Inscription</button>
+            <button id="buttonConnexion" onclick="DivConnexion()" class="toolbarBtn">Connexion</button>
+            <?php endif; ?>
+            <button id="usernameProfile" onclick="profil()" class="toolbarBtn"><?php  echo "Bienvenue "; if (User::getCurrentUser()->isVisitor()) echo "Visiteur"; else  echo User::getCurrentUser()->getUsername(); ?></button>
+
             <div class="toolbarSeparator"></div>
-            
+
             <img src="css/icons/gear.png" id="reglages" alt="reglages" class="toolbarBtn iconBtn"/>
-            <img src = "css/icons/playlist.png" id ="playlists" alt = "playlists" class="toolbarBtn iconBtn" onclick="afficherPlaylists()"/> 
-            <img src = "css/icons/fav.png" id ="favoris" alt = "favoris" class="toolbarBtn iconBtn"/> 
+            <img src = "css/icons/playlist.png" id ="playlists" alt = "playlists" class="toolbarBtn iconBtn" onclick="afficherPlaylists()"/>
+            <img src = "css/icons/fav.png" id ="favoris" alt = "favoris" class="toolbarBtn iconBtn"/>
     </nav>
-    
-    
-    
-        
+
+
+
+
     <div id ="mainDiv">
         <p>ceci <br>est <br> la <br>div <br>principale </p>
     </div>
-    
-    
+
+
 
     <footer>
-        <div id="entetePlaylist"><img src="css/icons/voletUp.png" data-src-up="css/icons/voletUp.png" data-src-down="css/icons/voletDown.png" class="iconBtn" id="entetePlaylistBtn">
-        <div id="playlistInfos"></div>        
+        <div id="entetePlaylist"><img alt="" src="css/icons/voletUp.png" data-src-up="css/icons/voletUp.png" data-src-down="css/icons/voletDown.png" class="iconBtn" id="entetePlaylistBtn">
+        <div id="playlistInfos"></div>
         </div>
         <div id="voletPlaylist">
             <ul class="trackList">
-               
+
             </ul>
         </div>
         <div id="player">
             <div id="playerUI">
-                <audio id="audio"><source src="music.mp3" type="audio/mpeg"></audio>
+                <audio id="audio"><source src="#" type="audio/mpeg"></audio>
                 <img id="previousTrack" alt="Précédent" class="iconBtn" src="css/icons/previous.png" />
                 <img id="play" alt="Play" class="iconBtn" src="css/icons/play.png" />
                 <img id="nextTrack" alt="Suivant" class="iconBtn" src="css/icons/next.png" />
@@ -96,7 +97,7 @@ class DefaultView
                 </span>
             </div>
             <div id="playerInfos">
-            
+
             </div>
         </div>
     </footer>

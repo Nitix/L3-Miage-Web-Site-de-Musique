@@ -24,7 +24,7 @@ function afficherPlaylists()
     $.ajax({
         url: 'index.php', //url du script PHP qu'on appelle
         type: 'GET', // Le type de la requête HTTP, ici  GET
-        data: 'c=guest&a=getPlaylists', // c = controlleur PHP a executer, a = methode de ce controlleur a executer, q = recherche
+        data: 'c=playlist&a=getPlaylists', // c = controlleur PHP a executer, a = methode de ce controlleur a executer, q = recherche
         dataType: 'JSON', //on demande du JSON en retour
         success: function (data) {
             
@@ -62,7 +62,7 @@ function delPlaylist(playlist_id, elementId){
         $.ajax({
              url : 'index.php', //url du script PHP qu'on appelle
              type : 'GET', // Le type de la requête HTTP, ici  GET
-             data : 'c=guest&a=delPlaylist&id='+playlist_id,
+             data : 'c=playlist&a=delPlaylist&id='+playlist_id,
              dataType : 'JSON', //on demande du JSON en retour
              success: function(data){
                  
@@ -95,7 +95,7 @@ function chargerPlaylist(playlist_id, lancerApresChargement)
     $.ajax({
         url: 'index.php', //url du script PHP qu'on appelle
         type: 'GET', // Le type de la requête HTTP, ici  GET
-        data: 'c=guest&a=getPlaylist&id='+playlist_id, // c = controlleur PHP a executer, a = methode de ce controlleur a executer
+        data: 'c=playlist&a=getPlaylist&id='+playlist_id, // c = controlleur PHP a executer, a = methode de ce controlleur a executer
         dataType: 'JSON', //on demande du JSON en retour
         success: function (data) {
             //console.log(data);
@@ -163,7 +163,7 @@ function delFromPlaylist(track_id, playlist_id, position, elementId)
         $.ajax({
          url : 'index.php', //url du script PHP qu'on appelle
          type : 'GET', // Le type de la requête HTTP, ici  GET
-         data : 'c=guest&a=delTrackFromPlaylist&pos='+position+'&plid='+playlist_id,
+         data : 'c=playlist&a=delTrackFromPlaylist&pos='+position+'&plid='+playlist_id,
          dataType : 'JSON', //on demande du JSON en retour
          success: function(data){
 
@@ -241,33 +241,26 @@ function previousTrack()
 }
 
 function DivInscription(){
-    $("#mainDiv").empty();
+   $("#mainDiv").empty();
     
-   $("#mainDiv").append('<form class ="inscription"><br><input type="text" value="Votre nom"/><br>           <input type ="text" value = "Vvotre prenom"/><br>           <input type="text" value ="choisissez un identifiant"/>           <input type="text" value="Votre adrese email"/><br>           <input type ="text" value ="Choisissez un mot de passe"/><br>           <input type = "text" value ="confirmez votre mot de passe"/><br>           <input type ="submit" value ="m\'inscrire" id="minscrire" class="bouton"/>       </form>');
-    
-    /*
-    var defaut = document.getElementById('divDefaut');
-    var conx = document.getElementById('divConx');
-    var insc = document.getElementById('divInsc');
+   $("#mainDiv").append('<form class="inscription" onsubmit="return register()"><h2>Inscription</h2>' +
+       '<label for="username" class="left">Username</label><input class="right" id="username" type="text" placeholder="Identifiant"/><br>' +
+       '<label for="email" class="left">Email</label><input class="right" id="email" type="email" placeholder="Votre adrese email"/><br>' +
+       '<label for="password" class="left">Mot de passe</label><input class="right" id="password" type ="password" placeholder="Mot de passe"/><br>' +
+       '<label for="passwordcheck" class="left">Confirmation</label><input class="right" id="passwordcheck" type = "password" placeholder="Confirmation du mot de passe"/><br>' +
+       '<button type ="submit" class="bouton right buttonConnection">M\'inscrire</button>' +
+   '</form>');
 
-    defaut.style.display="none";
-    conx.style.display="none";
-    insc.style.display="block";*/
 }
 
 function DivConnexion(){
      $("#mainDiv").empty();
     
-   $("#mainDiv").append('<form class="connexion">            <br><br><br><br>            <span>Identifiant  </span><br>            <input type ="text" value="identifiant"/><br> <br>            <span>Mot de passe</span><br>            <input type = "text" value ="entrez votre mot de passe"/><br>            <br>            <input type="button" value ="Me connecter" class="bouton"/>        </form>');
-    /*
-    var defaut = document.getElementById('divDefaut');
-    var conx = document.getElementById('divConx');
-    var insc = document.getElementById('divInsc');
-
-    defaut.style.display="none";
-    insc.style.display ="none";
-    conx.style.display ="block";*/
-    
+   $("#mainDiv").append('<form class="connexion" onsubmit="return login()"><h2>Connexion</h2>' +
+   '<label for="username" class="left">Username</label><input class="right" id="username" type="text" placeholder="Identifiant"/><br>' +
+   '<label for="password" class="left">Mot de passe</label><input class="right" id="password" type ="password" placeholder="Mot de passe"/><br>' +
+   '<button type ="submit" class="bouton right buttonConnection">Se connextion</button>' +
+   '</form>');
     
 }
 
@@ -328,3 +321,92 @@ $( window ).resize(function(){
         $("#playlistsPopup").offset({ left: $("html").width() - $("#playlistsPopup").width() - 10 });
     }
 });
+
+function register(){
+    $.ajax({
+        type: "POST",
+        url: "index.php?c=user&a=register",
+        data: { username: $("#username").val(),
+            email: $("#email").val(),
+            password: $("#password").val(),
+            passwordcheck : $("#passwordcheck").val()
+        },
+        dataType: 'JSON'
+    })
+    .done(function( msg ) {
+        if(msg.status == 0){
+            $("#usernameProfile").html("Bienvenue " + $("#username").val());
+            $("#buttonConnexion").hide();
+            $("#buttonInscription").hide();
+            $("#mainDiv").html("Vous êtes maintenant inscrit");
+        }else{
+            for(var err in msg.errors){
+                switch (msg.errors[err].id){
+                    case 10 :
+                        $("#email").notify("Email incorrect", {
+                            elementPosition: 'right', className: "error", hideDuration: 10000});
+                        break;
+                    case 11:
+                        $("#email").notify("Email déjà utilisé", {
+                            elementPosition: 'right', className: "error", hideDuration: 10000});
+                        break;
+                    case 12:
+                        $("#username").notify("Username incorrect", {
+                            elementPosition: 'right', className: "error", hideDuration: 10000});
+                        break;
+                    case 13:
+                        $("#username").notify("Username déjà utilisé", {
+                            elementPosition: 'right', className: "error", hideDuration: 10000});
+                        break;
+                    case 14:
+                        $("#passwordcheck").notify("Mots de passe différents", {
+                            elementPosition: 'right', className: "error", hideDuration: 10000});
+                        break;
+                    case 15:
+                        $("#password").notify("Mot de passe trop faible (au moins 8 caractères)", {
+                            elementPosition: 'right', className: "error", hideDuration: 10000});
+                        break;
+                }
+            }
+
+        }
+    })
+    .fail(function(msg){
+        if(msg.status == -1){
+            $(".buttonConnection").notify("Serveur indisponible", { elementPosition: 'right', className: "error" });
+        }else{
+            $(".buttonConnection").notify("Erreur inconnu", { elementPosition: 'right', className: "error" });
+        }
+    });
+    return false;
+};
+
+function login(){
+    $.ajax({
+        type: "POST",
+        url: "index.php?c=user&a=login",
+        data: {
+            username: $("#username").val(),
+            password: $("#password").val()
+        },
+        dataType: 'JSON'
+    })
+        .done(function( msg ) {
+            if(msg.status == 0){
+                $("#usernameProfile").html("Bienvenue " + $("#username").val());
+                $("#buttonConnexion").hide();
+                $("#buttonInscription").hide();
+                $("#mainDiv").html("Vous êtes maintenant connecté");
+            }else{
+                $(".buttonConnection").notify("Combinaison incorrect", { elementPosition: 'right', className: "error" });
+            }
+        })
+        .fail(function(msg){
+            if(msg.status == -1){
+                $(".buttonConnection").notify("Serveur indisponible", { elementPosition: 'right', className: "error" });
+            }else{
+                $(".buttonConnection").notify("Erreur inconnu", { elementPosition: 'right', className: "error" });
+            }
+        });
+    return false;
+};

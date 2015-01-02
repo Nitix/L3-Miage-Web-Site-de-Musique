@@ -22,7 +22,7 @@ class FrontController
         'default' => FrontController::DEFAULT_CONTROLLER,
         'base' => 'BaseController',
         'user' => 'UserController',
-        'guest' => 'GuestController'
+        'playlist' => 'PlaylistController'
     );
 
 

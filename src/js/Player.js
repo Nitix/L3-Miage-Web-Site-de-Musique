@@ -111,7 +111,8 @@ var Player = (function () {
             $(this.player).notify("Aucune musique précèdente", { elementPosition: 'top center', className: "warn" });
     };
     Player.prototype.error = function (e) {
-        $(this.player).notify("Erreur lors du chargement de la musique", { elementPosition: 'top center', className: "error" });
+        if(this.isMusicSet)
+          $(this.player).notify("Erreur lors du chargement de la musique", { elementPosition: 'top center', className: "error" });
     };
     Player.prototype.updateProgressBar = function () {
         if (this.isMusicSet) {

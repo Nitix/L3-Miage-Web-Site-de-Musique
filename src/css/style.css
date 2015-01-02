@@ -418,8 +418,8 @@ left: 0;
     height:240px;
     position:absolute;
     left:50%;
-    top:50%;
-    margin:-100px 0 0 -200px;
+    top:50px;
+    margin:0 0 0 -200px;
 }
 
 /*connexion formulaire*/
@@ -648,4 +648,30 @@ progress::-webkit-progress-value {
     vertical-align: middle;
     height: 28px;
     padding-top: 9px;
+}
+
+
+
+.left, .right {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.left {
+    width: 100px;
+    text-align: right;
+}
+
+.right {
+    margin-left: 25px;
+    width: 200px;
+    vertical-align: top;
+}
+
+.buttonConnection
+{
+    margin-top: 15px;
+    margin-left: 126px;
+    padding: 10px;
+
 }

@@ -3,14 +3,12 @@
 
 namespace Controllers;
 
-use Models\User;
-
 
 /**
  * Control the interaction with the user
  * @package Controllers\User
  */
-class GuestController implements Controller
+class PlaylistController implements Controller
 {
 
     /**

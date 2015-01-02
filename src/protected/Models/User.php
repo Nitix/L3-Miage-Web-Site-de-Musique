@@ -207,7 +207,7 @@ class User
      */
     public static function isValidUsername($username)
     {
-        return isset($username) && strlen($username) > 4 && strlen($username) <= self::MAX_USERNAME_STR_LENGTH;
+        return isset($username) && strlen($username) > 1 && strlen($username) <= self::MAX_USERNAME_STR_LENGTH;
     }
 
     /**
@@ -219,13 +219,12 @@ class User
     public static function isUsernameAlreadyInUse($username)
     {
         $db = Base::getConnection();
-        $stmt = $db->prepare("SELECT COUNT(*) AS count_username FROM users WHERE email = :username");
+        $stmt = $db->prepare("SELECT COUNT(*) AS count_username FROM users WHERE username = :username");
         $stmt->bindParam(":username", $username, PDO::PARAM_STR);
         $stmt->execute();
 
         $result = $stmt->fetch();
         $stmt->closeCursor();
-
         return $result['count_username'] > 0;
     }
 
@@ -276,7 +275,7 @@ class User
 
         if ($response) {
             $u = new User();
-            $u->id = $response['id'];
+            $u->id = $response['user_id'];
             $u->username = $response['username'];
             $u->password = $response['password'];
             $u->email = $response['email'];
@@ -307,7 +306,7 @@ class User
 
         if ($response) {
             $u = new User();
-            $u->id = $response['id'];
+            $u->id = $response['user_id'];
             $u->username = $response['username'];
             $u->password = $response['password'];
             $u->email = $response['email'];
@@ -345,7 +344,7 @@ class User
     {
         $user = User::findByUsername($username);
         if (password_verify($password, $user->getPassword())) {
-            if (password_needs_rehash($user->$password, PASSWORD_DEFAULT)) {
+            if (password_needs_rehash($user->password, PASSWORD_DEFAULT)) {
                 $user->password = password_hash($password, PASSWORD_DEFAULT);
                 $user->update();
             }

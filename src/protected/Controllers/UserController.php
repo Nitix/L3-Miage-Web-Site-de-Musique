@@ -17,7 +17,6 @@ class UserController implements Controller
      */
     private $actions = array(
         'login' => false,
-        'check' => true,
         'register' => false,
         'update' => true,
         'view' => false,
@@ -142,25 +141,18 @@ class UserController implements Controller
     }
 
     /**
-     * Redirect the user to the login
-     */
-    public function login()
-    {
-        echo json_encode(array("url" => array("controller" => "user", "method" => "login")));
-    }
-
-    /**
      * Check the login and the password given by POST
      * Connect and register to the session
      */
-    public function check()
+    public function login()
     {
-        if (isset($_POST["login"]) && isset($_POST["password"])) {
-            $logged = User::login($_POST["login"], $_POST["password"]);
+        if (isset($_POST["username"]) && isset($_POST["password"])) {
+            $logged = User::login($_POST["username"], $_POST["password"]);
             if ($logged) {
-                echo json_encode(array("success"));
+                echo json_encode(array("status" => "0"));
             } else {
                 echo json_encode(array(
+                    "status" => "2",
                     "error" => "2",
                     "url" => array("controller" => "user", "method" => "login"),
                     "message" => "Incorrect password or login"
@@ -168,6 +160,7 @@ class UserController implements Controller
             }
         } else {
             echo json_encode(array(
+                "status" => "1",
                 "error" => "1",
                 "url" => array("controller" => "user", "method" => "login"),
                 "message" => "Password or login empty"
@@ -189,29 +182,27 @@ class UserController implements Controller
         try {
             $ok = true;
             $errors = array();
-            if (!User::isValidEmail($_POST["email"])) {
-                array_push($errors, array(10, "Incorrect email"));
+            if (!isset($_POST["email"]) || !User::isValidEmail($_POST["email"])) {
+                array_push($errors, array("id" => 10,  "msg" => "Incorrect email"));
                 $ok = false;
             } elseif (User::isEmailAlreadyInUse($_POST["email"])) {
-                array_push($errors, array(11, "Email already in use"));
+                array_push($errors, array("id" =>11,   "msg" => "Email already in use"));
                 $ok = false;
             }
 
-            if (!User::isValidUsername($_POST["username"])) {
-                array_push($errors, array(12, "Incorrect username"));
+            if (!isset($_POST["username"]) || !User::isValidUsername($_POST["username"])) {
+                array_push($errors, array("id" =>12,   "msg" => "Incorrect username"));
                 $ok = false;
             } elseif (User::isUsernameAlreadyInUse($_POST["username"])) {
-                array_push($errors, array(13, "Email already in use"));
+                array_push($errors, array("id" =>13,   "msg" => "Username already in use"));
                 $ok = false;
             }
 
-            if ($_POST['password'] != $_POST['password-check']) {
-                array_push($errors, array(14, "Different passwords"));
+            if (!isset($_POST["password"]) || !isset($_POST["passwordcheck"]) ||  $_POST['password'] != $_POST['passwordcheck']) {
+                array_push($errors, array("id" =>14,   "msg" => "Different passwords"));
                 $ok = false;
-            }
-
-            if (User::isWeakPassword($_POST["password"])) {
-                array_push($errors, array(15, "Password too much weak"));
+            }else if (User::isWeakPassword($_POST["password"])) {
+                array_push($errors, array("id" =>15,   "msg" => "Password too much weak"));
                 $ok = false;
             }
 
@@ -220,12 +211,14 @@ class UserController implements Controller
                 $user->setEmail($_POST["email"]);
                 $user->setPassword($_POST["password"]);
                 $user->setUsername($_POST["username"]);
+                $user->setIsVisitor(false);
                 $user->insert();
+                $_SESSION['user'] = $user;
                 echo json_encode(array("status" => 0));
             }else {
                 echo json_encode(array(
-                    "status" => "-1",
-                    $errors
+                    "status" => "1",
+                    "errors" => $errors
                 ));
             }
         }catch (\PDOException $e){
