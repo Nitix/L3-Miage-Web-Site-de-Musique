@@ -239,11 +239,21 @@ class Track
     public static function findByNameLikeWithArtist($name, $limit = 20)
     {
         $db = Base::getConnection();
+        
+        if($limit == 0)
+        {
+            $qlimit = '';
+        }
+        else
+        {
+            $qlimit = 'LIMIT :limit';
+        }
 
-        $stmt = $db->prepare("SELECT tracks.*, artists.artist_id, artists.name, artists.image_url FROM tracks INNER JOIN artists ON tracks.artist_id = artists.artist_id  WHERE tracks.title LIKE :like OR artists.name LIKE :like ORDER BY tracks.title LIMIT :limit");
+        $stmt = $db->prepare("SELECT tracks.*, artists.artist_id, artists.name, artists.image_url FROM tracks INNER JOIN artists ON tracks.artist_id = artists.artist_id  WHERE tracks.title LIKE :like OR artists.name LIKE :like ORDER BY tracks.title " . $qlimit);
         $like = "%" . $name . "%";
         $stmt->bindParam(":like", $like, PDO::PARAM_STR);
-        $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
+        if($limit == 0)
+            $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
         $stmt->execute();
 
 

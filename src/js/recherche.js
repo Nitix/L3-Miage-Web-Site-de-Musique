@@ -279,15 +279,27 @@ function addToThisPlaylist(track_id, track_title, track_artist, artist_id, track
                      chargerPlaylist(playlist_id, false);
                  }
                  
+                 //on ordonne a la popup de se fermer automatiquement au bout de 2.5sec
+                 var callbackId = setTimeout(function(){
+                     $('#playlistsPopup').remove()
+                 },2500);
+                 
                 $('#playlistsPopup').empty();
+                $("#playlistsPopup").append('<img src="css/icons/close.png" id="popupCloseBtn" class="iconBtn"/>');
+                
+                $("#playlistsPopup").children('#popupCloseBtn').click(function(){
+                    //si l'utilisateur clique sur le bouton CLOSE de la popup, on annule l'evenement de fermeture auto au bout de 2.5sec
+                    clearTimeout(callbackId);
+                    $('#playlistsPopup').remove();
+                });
+                
                 $('#playlistsPopup').append("<p>La musique -"+track_title+"- a bien été ajoutée à cette playlist</p>");
                 $('#playlistsPopup').children("p").css("color","#B1FF00");
+                $('#playlistsPopup').height(80);
                  //$("#playLiId"+playlist_id).notify("La musique -"+track_title+"- a bien été ajoutée à cette playlist","success");
                  //alert("La musique -"+track_title+"- a bien été ajoutée à cette playlist");
                  
-                 setTimeout(function(){
-                     $('#playlistsPopup').remove()
-                 },3500);
+                 
                  
              }
          }

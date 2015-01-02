@@ -48,7 +48,7 @@ class BaseController implements Controller
     {
 
         $data = array();
-        $tracks = Track::findByNameLikeWithArtist($_GET["q"]);
+        $tracks = Track::findByNameLikeWithArtist($_GET["q"],0);
         $data['musiques'] = array();
         $data['artistes'] = array();
         foreach ($tracks as $id => $track) {

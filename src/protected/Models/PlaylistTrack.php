@@ -173,4 +173,25 @@ class PlaylistTrack
         $stmt->execute($params);
 
     }
+    
+    public function delete()
+    {
+        $db = Base::getConnection();
+
+        $plid = $this->getPlaylistId();
+        $trid = $this->getTrackId();
+        $pos = $this->getPosition();
+        
+        $stmt = $db->prepare("DELETE FROM playlists_tracks WHERE playlist_id=:plid AND position=:pos ; 
+                                UPDATE playlists_tracks 
+                                SET position = position - 1 
+                                WHERE playlist_id = :plid AND position > :pos
+                                ORDER BY position ASC");
+        
+        $stmt->bindParam(":plid", $plid , PDO::PARAM_INT);
+        $stmt->bindParam(":pos", $pos , PDO::PARAM_INT);
+        $ok = $stmt->execute();
+        
+        return $ok;
+    }
 } 

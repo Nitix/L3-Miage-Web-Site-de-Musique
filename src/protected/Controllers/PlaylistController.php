@@ -206,7 +206,7 @@ class PlaylistController implements Controller
     {
 
         $tmp = array();
-        $res = false;
+        $ok = true;
         
         foreach($_SESSION["playlists"] as $plnum => $pl)
         {
@@ -221,7 +221,7 @@ class PlaylistController implements Controller
                     
                     try
                     {
-                        $play->delete();
+                        $ok = $play->delete();
                     }
                     catch(PDOException $err)
                     {
@@ -230,7 +230,7 @@ class PlaylistController implements Controller
                         return;
                     }
                 }
-                $res = true;
+               
             }
             else
             {
@@ -246,7 +246,7 @@ class PlaylistController implements Controller
             $_SESSION["playlists"][] = $pl;
         }
         
-        echo json_encode($res);
+        echo json_encode($ok);
     }
     
     function addTrackToPlaylist()

@@ -69,7 +69,7 @@ function delPlaylist(playlist_id, elementId){
              data : 'c=playlist&a=delPlaylist&id='+playlist_id,
              dataType : 'JSON', //on demande du JSON en retour
              success: function(data){
-                 
+                 console.log(data);
                  if(data == true)
                  {
                      //on met a jour l'affichage des playlists

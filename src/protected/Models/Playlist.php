@@ -242,8 +242,10 @@ class Playlist
         $stmt = $db->prepare("DELETE FROM playlists WHERE playlist_id=:playlist_id;");
         $stmt->bindParam(":playlist_id", $this->playlist_id, PDO::PARAM_INT);
 
-        $stmt->execute();
-
+        $ok = $stmt->execute();
+        
         $stmt->closeCursor();
+        
+        return $ok;
     }
 }
