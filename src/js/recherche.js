@@ -122,6 +122,11 @@ function viewArtistPage(artist_id) {
          data : 'c=base&a=getArtistPage&id='+artist_id,
          dataType : 'JSON', //on demande du JSON en retour
          success: function(data){
+              if(voletPlaylistOuvert)
+            {
+                $("#entetePlaylist").click();
+            }
+            
             $("#mainDiv").empty();
                         
             $("#mainDiv").append('<div id="artistPageEntete"><img src="'+data.artiste.image_url+'" class="artistImage"/><h1>'+data.artiste.name+'</h1></div><div id="artistInfos"></div>');

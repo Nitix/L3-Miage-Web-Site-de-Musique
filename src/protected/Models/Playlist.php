@@ -40,7 +40,7 @@ class Playlist
      * Set the playlist id
      * @param int $playlist_id
      */
-    private function setPlaylistId($playlist_id)
+    public function setPlaylistId($playlist_id)
     {
         $this->playlist_id = $playlist_id;
     }

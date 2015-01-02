@@ -1,10 +1,12 @@
 var footerHeight = $("footer").height();
+var voletPlaylistOuvert = false;
 
+// variable globale qui garde en memoire la playlist en cours de lecture
 var playlistCourante = {
-    playlist_id: null,
-    playlist_name: null,
-    tracks: null,
-    playingTrack: null
+    playlist_id: null,      //id de la playlist en cours de lecture
+    playlist_name: null,    // nom de la playlist en cours de lecture
+    tracks: null,           //musiques contenues dans la playlist
+    playingTrack: null      //position de la musique en cours de lecture dans la playlist
 };
 
 var htmlSize = { h: $("html").height(), w: $("html").width() };
@@ -15,6 +17,7 @@ var currentMousePos = { x: -1, y: -1 };
         currentMousePos.y = event.pageY;
     });
     
+//fonction qui affiche la liste des playlists depuis le menu principal
 function afficherPlaylists()
 {
     $("#mainDiv").empty();
@@ -51,6 +54,7 @@ function afficherPlaylists()
     });
 }
 
+//fonction qui supprime les playlists depuis le menu principal
 function delPlaylist(playlist_id, elementId){
     
     if(playlistCourante.playlist_id == playlist_id && playlistCourante.playingTrack != null)
@@ -68,8 +72,10 @@ function delPlaylist(playlist_id, elementId){
                  
                  if(data == true)
                  {
+                     //on met a jour l'affichage des playlists
                     afficherPlaylists();
                     
+                    //si on a supprimé une playlist qui était en cours de lecture, on réinitialise la variable globale playlistCourante
                     if(playlist_id == playlistCourante.playlist_id)
                     {
                         playlistCourante.playlist_id = null;
@@ -88,6 +94,8 @@ function delPlaylist(playlist_id, elementId){
     }
 }
 
+//fonction pour charger une playlist dans le volet de playlist et dans la variable globale playlistCourante. "lancerApresChargement" definit s'il faut lancer la premiere
+//musique de la playlist dans le lecteur audio une fois le chargement terminé
 function chargerPlaylist(playlist_id, lancerApresChargement)
 {
     console.log(playlist_id);
@@ -140,7 +148,7 @@ function chargerPlaylist(playlist_id, lancerApresChargement)
                  if(lancerApresChargement)
                  {
                      playlistCourante.playingTrack = 0;
-                     console.log(playlistCourante);
+                     //console.log(playlistCourante);
                      lireDepuisPlaylist(data.tracks[0].track_id,data.tracks[0].title,data.tracks[0].name,data.tracks[0].artist_id,data.tracks[0].mp3_url, 0);
                     
                  }
@@ -151,8 +159,10 @@ function chargerPlaylist(playlist_id, lancerApresChargement)
     });
 }
 
+//fonction de suppression d'une musique d'une playlist
 function delFromPlaylist(track_id, playlist_id, position, elementId)
 {
+    //si on ecoute actuellement cette musique depuis cette playlist, alors erreur
     if(playlistCourante.playlist_id == playlist_id && playlistCourante.playingTrack == position)
     {
         console.log(elementId);
@@ -188,6 +198,7 @@ function delFromPlaylist(track_id, playlist_id, position, elementId)
     }
 }
 
+//fonction pour surligner la musique en cours de lecture dans la playlist
 function surlignerMusiqueEnCours()
 {
     var count = 0;
@@ -210,6 +221,7 @@ function surlignerMusiqueEnCours()
     });
 }
 
+//passe a la musique suivante de la playlist
 function nextTrack()
 {
     playlistCourante.playingTrack = playlistCourante.playingTrack + 1;
@@ -225,6 +237,7 @@ function nextTrack()
     
 }
 
+//passe a la musique precedente de la playlist
 function previousTrack()
 {
     playlistCourante.playingTrack = playlistCourante.playingTrack - 1;
@@ -277,7 +290,7 @@ $("#entetePlaylist").click(function(){
                 }, 500, function(){
                     $("#entetePlaylistBtn").attr("src", $("#entetePlaylistBtn").attr("data-src-down"));     
                 });
-            
+            voletPlaylistOuvert = true;
         }
         else
         {
@@ -287,7 +300,7 @@ $("#entetePlaylist").click(function(){
                 }, 500, function(){
                     $("#entetePlaylistBtn").attr("src", $("#entetePlaylistBtn").attr("data-src-up"));
                 });
-                
+            voletPlaylistOuvert = false;    
             
         }
         
@@ -338,6 +351,7 @@ function register(){
             $("#usernameProfile").html("Bienvenue " + $("#username").val());
             $("#buttonConnexion").hide();
             $("#buttonInscription").hide();
+            $("#buttonDeconnexion").show();
             $("#mainDiv").html("Vous êtes maintenant inscrit");
         }else{
             for(var err in msg.errors){
@@ -393,9 +407,11 @@ function login(){
     })
         .done(function( msg ) {
             if(msg.status == 0){
+                console.log(msg.user);
                 $("#usernameProfile").html("Bienvenue " + $("#username").val());
                 $("#buttonConnexion").hide();
                 $("#buttonInscription").hide();
+                $("#buttonDeconnexion").show();
                 $("#mainDiv").html("Vous êtes maintenant connecté");
             }else{
                 $(".buttonConnection").notify("Combinaison incorrect", { elementPosition: 'right', className: "error" });
@@ -410,3 +426,18 @@ function login(){
         });
     return false;
 };
+
+function disconnect(){
+   
+        
+    $.ajax({
+        type: "GET",
+        url: "index.php?c=user&a=disconnect"
+    })
+        .done(function() {
+           location.reload();
+        })
+        .fail(function(){
+            
+        });
+}

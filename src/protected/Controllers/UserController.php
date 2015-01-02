@@ -19,6 +19,7 @@ class UserController implements Controller
     private $actions = array(
         'login' => false,
         'register' => false,
+        'disconnect' => false,
         'update' => true,
         'view' => false,
         'getInformation' => false,
@@ -233,6 +234,13 @@ class UserController implements Controller
         }catch (\PDOException $e){
             echo json_encode(array("status" => -1));
         }
+    }
+    
+    public function disconnect()
+    {
+        session_destroy();
+        session_start();
+        
     }
 
     /**
