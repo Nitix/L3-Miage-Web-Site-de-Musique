@@ -157,6 +157,7 @@ class UserController implements Controller
             if ($logged) {
                 $playlistController = new PlaylistController();
                 $playlistController->saveVisitorPlaylistToDatabase();
+                $playlistController->loadUserData();
                 echo json_encode(array("status" => "0"));
             } else {
                 echo json_encode(array(

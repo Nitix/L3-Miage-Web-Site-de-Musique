@@ -97,7 +97,7 @@ class PlaylistTrack
     {
         $db = Base::getConnection();
 
-        $stmt = $db->prepare("SELECT * FROM playlists_tracks WHERE playlist_id=:id ;");
+        $stmt = $db->prepare("SELECT * FROM playlists_tracks WHERE playlist_id=:id ORDER BY position;");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -115,7 +115,42 @@ class PlaylistTrack
         $stmt->closeCursor();
         return $tab;
     }
+    
+    public static function findByPlaylistIDWithTracks($plid)
+    {
+        $db = Base::getConnection();
 
+        $stmt = $db->prepare("SELECT * FROM playlists_tracks INNER JOIN tracks ON playlists_tracks.track_id = tracks.track_id INNER JOIN artists ON artists.artist_id = tracks.artist_id WHERE playlist_id=:id ORDER BY position;");
+        $stmt->bindParam(":id", $plid, PDO::PARAM_INT);
+        $ok = $stmt->execute();
+        //var_dump($stmt);
+        $tab = array();
+        foreach ($stmt->fetchAll() as $pl_trk) {
+            
+            $tab[] = $pl_trk;
+        }
+        
+        $stmt->closeCursor();
+        return $tab;
+    }
+
+    public function insert()
+    {
+        $db = Base::getConnection();
+
+        $plid = $this->getPlaylistId();
+        $trid = $this->getTrackId();
+        $pos = $this->getPosition();
+        
+        $stmt = $db->prepare("INSERT INTO playlists_tracks (playlist_id, track_id, position) VALUES (:playlist_id, :track_id, :position)");
+        
+        $stmt->bindParam(":playlist_id", $plid , PDO::PARAM_INT);
+        $stmt->bindParam(":track_id", $trid , PDO::PARAM_INT);
+        $stmt->bindParam(":position", $pos , PDO::PARAM_INT);
+        $ok = $stmt->execute();
+        
+        return $ok;
+    }
 
     public static function insertMultiples($tracks, $playlist_id){
 

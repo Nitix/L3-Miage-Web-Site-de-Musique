@@ -35,6 +35,46 @@ class PlaylistController implements Controller
         
     }
     
+    function loadUserData()
+    {
+        $user_id = $_SESSION["user"]->getId();
+        
+        if(!isset($_SESSION["playlists"]))
+        {
+            $_SESSION["playlists"] = array();
+        }
+        
+        $playlists = Playlist::findByUserID($user_id);
+        
+        foreach($playlists as $plid => $pl)
+        {
+            $tmppl = array();
+            $tmppl["playlist_id"] = $plid;
+            $tmppl["playlist_name"] = $pl->getPlaylistName();
+            
+            $pltracks = PlaylistTrack::findByPlaylistIDWithTracks($plid);
+            $tmppl["tracks"] = array();
+            
+            foreach($pltracks as $pltrid => $pltr)
+            {
+                
+                $tmptr = array();
+                $tmptr["track_id"] = $pltr["track_id"];
+                $tmptr["title"] = $pltr["title"];
+                $tmptr["name"] = $pltr["name"];
+                $tmptr["artist_id"] = $pltr["artist_id"];
+                $tmptr["mp3_url"] = $pltr["mp3_url"];
+                
+                
+                $tmppl["tracks"][] = $tmptr;
+            }
+            
+            
+            
+            $_SESSION["playlists"][] = $tmppl;
+        }
+    }
+    
     function getPlaylists()
     {
         $array = array();
@@ -229,6 +269,7 @@ class PlaylistController implements Controller
                 $track["name"] = $_GET["trart"];
                 $track["artist_id"] = $_GET["artid"];
                 $track["mp3_url"] = $_GET["trurl"];
+                $ok = true;
                 
                 if(!User::getCurrentUser()->isVisitor())
                 {
@@ -242,7 +283,7 @@ class PlaylistController implements Controller
                     
                     try
                     {
-                        $pltr->insert();
+                        $ok = $pltr->insert();
                     }
                     catch(PDOException $err)
                     {
@@ -259,7 +300,7 @@ class PlaylistController implements Controller
         }
         
         //var_dump($_SESSION);
-        echo json_encode(true);
+        echo json_encode($ok);
     }
     
     function delTrackFromPlaylist()
@@ -356,22 +397,28 @@ class PlaylistController implements Controller
      * Called when the user is connected
      */
     function saveVisitorPlaylistToDatabase(){
-        $temp = array();
-        foreach($_SESSION["playlists"] as $raw_playlist){
-            try {
-                $playlist = new Playlist();
-                $playlist->setPlaylistName($raw_playlist['playlist_name']);
-                $playlist->setUserId(User::getCurrentUser()->getId());
-                $playlist->insert();
-                $position = 0;
-                if (isset($raw_playlist['tracks'])) {
-                    PlaylistTrack::insertMultiples($raw_playlist['tracks'], $playlist->getPlaylistId());
+        
+        
+        if(isset($_SESSION["playlists"]))
+        {
+            $temp = array();
+            foreach($_SESSION["playlists"] as $raw_playlist){
+                try {
+                    $playlist = new Playlist();
+                    $playlist->setPlaylistName($raw_playlist['playlist_name']);
+                    $playlist->setUserId(User::getCurrentUser()->getId());
+                    $playlist->insert();
+                    $position = 0;
+                    if (isset($raw_playlist['tracks'])) {
+                        PlaylistTrack::insertMultiples($raw_playlist['tracks'], $playlist->getPlaylistId());
+                    }
+                    $temp[$playlist->getPlaylistId()] = $raw_playlist;
+                }catch (\Exception $e){
+    
                 }
-                $temp[$playlist->getPlaylistId()] = $raw_playlist;
-            }catch (\Exception $e){
-
             }
+            $_SESSION["playlists"] = $temp;
         }
-        $_SESSION["playlists"] = $temp;
+        
     }
 } 
