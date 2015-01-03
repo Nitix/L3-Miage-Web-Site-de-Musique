@@ -23,11 +23,11 @@ var Player = (function () {
             //p.next();
             nextTrack();
         });
-        $(this.audio).on("error stalled", function (e) {
+        $(this.audio).on("error", function (e) {
             p.showPlayButton();
             p.error(e);
         });
-        $(this.source).on("error stalled", function (e) {
+        $(this.source).on("error", function (e) {
             p.showPlayButton();
             p.error(e);
         });
