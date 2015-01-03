@@ -32,14 +32,14 @@ class DefaultView
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Popup en CSS3 et JS pour le blog webdesignweb.fr" />
     <meta name="keywords" content="modal, window, overlay, modern, box, css transition, css animation " />
-    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="shortcut icon" href="favicon.ico">
     <!--<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic|Montserrat:400,700' rel='stylesheet' type='text/css'>-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 <title>10H - Site de musique</title>
 </head>
 <body>
     <header>
-    <h1> 10H </h1>(lolilol)
+    <h1> 10H </h1>Un max de son pour bien commencer la journée
     </header>
 
     <nav>
@@ -66,7 +66,14 @@ class DefaultView
 
 
     <div id ="mainDiv">
-        <p>ceci <br>est <br> la <br>div <br>principale </p>
+        <p>Bienvenue sur 10h, utilisez la barre de recherche en haut à gauche en lancez-vous !</p>
+        <p>Site web réalisé par :  </p>
+        <ul>
+            <li>Papelier Romain</li>
+            <li>Pierson Guillaume</li>
+            <li>Verhoof Tom</li>
+            <li>Ahmed-Khalifa Aminetou</li>
+        </ul>
     </div>
 
 
