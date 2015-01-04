@@ -272,7 +272,7 @@ function DivConnexion(){
    $("#mainDiv").append('<form class="connexion" onsubmit="return login()"><h2>Connexion</h2>' +
    '<label for="username" class="left">Username</label><input class="right" id="username" type="text" placeholder="Identifiant"/><br>' +
    '<label for="password" class="left">Mot de passe</label><input class="right" id="password" type ="password" placeholder="Mot de passe"/><br>' +
-   '<button type ="submit" class="bouton right buttonConnection">Se connextion</button>' +
+   '<button type ="submit" class="bouton right buttonConnection">Se connecter</button>' +
    '</form>');
     
 }
