@@ -1,3 +1,4 @@
+//creation du plugin d'autocompletion
 $.widget("custom.catcomplete", $.ui.autocomplete, {
     _create: function () {
         this._super();
@@ -20,6 +21,7 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
     }
 });
 
+//integration du plugin d'autocompletion à la barre de recherche
 $("#recherche").catcomplete({
     source: 'index.php?c=base&a=autocomplete'
 });
@@ -55,6 +57,7 @@ $("#btnRecherche").click(function () {
                 $("#mainDiv").append('<div id="tracksFound"></div>');
                 $("#tracksFound").append('<h3>Musiques trouvées</h3>');
 
+                //affichage des musiques trouvées
                 if (data.musiques.length == 0) {
                     $("#tracksFound").append('<h5>Aucune musique trouvée</h5>');
                 } else {
@@ -90,6 +93,7 @@ $("#btnRecherche").click(function () {
                 $("#mainDiv").append('<div id="artistsFound"></div>');
                 $("#artistsFound").append('<h3>Artistes trouvés</h3>');
 
+                //affichage des artistes trouvés
                 if (data.artistes.length == 0) {
                     $("#artistsFound").append('<h5>Aucun artiste trouvé</h5>');
                 } else {
@@ -106,12 +110,15 @@ $("#btnRecherche").click(function () {
 
 });
 
+//fonction pour voir la page d'un artiste depuis le volet de playlist, qui necessite donc qu'on ferme ce volet automatiquement
+// obselete : utiliser viewArtistPage
 function viewArtistPageFromPlaylist(artist_id)
 {
     $("#entetePlaylist").click();
     viewArtistPage(artist_id);
 }
 
+//fonction pour afficher la page d'un artiste
 function viewArtistPage(artist_id) {
     console.log("page de l'artiste : " + parseInt(artist_id));
     //ouvrir la page de l'artiste
@@ -163,11 +170,14 @@ function viewArtistPage(artist_id) {
     });
 }
 
+//fonction pour lancer une musique dans le lecteur audio
 function lire(track_id, track_title, track_artist, artist_id, mp3_url) {
    
     $("#playerInfos").empty();
     $("#playerInfos").append(track_title+'<a class="trackList_artist" onclick="viewArtistPage('+artist_id+')">'+track_artist+'</a>');
     
+    //cette fonction n'est appelée que lorsqu'on veut lire une musique seule, pas dans une playlist. 
+    //On indique donc qu'on ne lit pas une musique de la playlist courante
     playlistCourante.playingTrack = null;
     surlignerMusiqueEnCours();
     
@@ -175,11 +185,14 @@ function lire(track_id, track_title, track_artist, artist_id, mp3_url) {
     p.play();
 }
 
+//fonction poure lancer une musique de la playlist en cours de lecture dans le lecteur 
 function lireDepuisPlaylist(track_id, track_title, track_artist, artist_id, mp3_url, position){
    
     $("#playerInfos").empty();
     $("#playerInfos").append(track_title+'<a class="trackList_artist" onclick="viewArtistPage('+artist_id+')">'+track_artist+'</a>');
     
+    //cette fonction n'est appelée que lorsqu'on veut changer la musique en cours de lecteur dans la playlist en cours.
+    //on indique donc qu'on change la musique en cours de lecture dans la playlist courante
     playlistCourante.playingTrack = position;
     surlignerMusiqueEnCours();
    
@@ -187,6 +200,7 @@ function lireDepuisPlaylist(track_id, track_title, track_artist, artist_id, mp3_
     p.play();
 }
 
+//fonction pour afficher la popup d'ajout d'une musique a une playlist
 function addToPlaylist(track_id, track_title, track_artist, artist_id, track_url) {
    
     //ouvrir la fenetre des playlists pour en choisir une ou ajouter la musique
@@ -224,6 +238,7 @@ function addToPlaylist(track_id, track_title, track_artist, artist_id, track_url
      
 }
 
+//fonction pour recuperer les playlists en session et les afficher dans la popup d'ajout à une playlist
 function getPlaylistsInSession(track_id, track_title, track_artist, artist_id, track_url)
 {
     console.log("TRACK "+track_id);
@@ -261,6 +276,7 @@ function getPlaylistsInSession(track_id, track_title, track_artist, artist_id, t
      });
 }
 
+//fonction pour ajouter une musique a la playlist selectionnée dans la popup d'ajout à une playlist
 function addToThisPlaylist(track_id, track_title, track_artist, artist_id, track_url, playlist_id)
 {
     $.ajax({
@@ -311,9 +327,12 @@ function addToFavs(track_id) {
     //ajouter la musique aux favs
 }
 
+//fonction pour supprimer une playlist depuis la popup d'ajout a une playlist
 function delPlaylistInPopup(track_id, track_title, track_artist, artist_id, track_url, playlist_id, elementId){
     
-     if($("#playlistInfos").attr("data-playlist-id") == playlist_id)
+    //si la playlist a supprimer est la playlist courante, et si une de ses musiques et en cours de lecture,
+    //alors erreur
+     if(playlistCourante.playlist_id == playlist_id && playlistCourante.playingTrack != null)
     {
         $("#"+elementId).notify("impossible de supprimer une playlist en cours de lecture !");
     }
@@ -345,13 +364,14 @@ function delPlaylistInPopup(track_id, track_title, track_artist, artist_id, trac
     }
 }
 
+//fonction pour créer une nouvelle playlist depuis la popup d'ajout à une playlist
 function addNewPlaylistInPopup(track_id, track_title, track_artist, artist_id, track_url) {
     //si on n'est pas en mode edition, on y entre
     $("#createPlaylistLi").animate({
         backgroundColor: "#2E2E2E"
     }, 1);
     
-    
+    //si le <li> de création de playlist n'est pas en mode édition, on passe en mode édition et on affiche le <input> pour entrer le nom
     if ($("#createPlaylistLi").attr("data-edition-mode") == "false") {
         
         $("#createPlaylistLi").empty();
@@ -360,6 +380,7 @@ function addNewPlaylistInPopup(track_id, track_title, track_artist, artist_id, t
         $("#newPlaylistName").focus();
         var noNameYet = true;
 
+        //lorsque l'utilisateur entre la premiere lettre du nom de la playlist, on efface le "Nom de la playlist..." dans le input
         $("#newPlaylistName").keydown(function () {
             if (noNameYet) {
                 

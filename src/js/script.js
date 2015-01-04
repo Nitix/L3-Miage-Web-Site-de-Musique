@@ -335,6 +335,7 @@ $( window ).resize(function(){
     }
 });
 
+//fonction pour inscrire un nouvel utilisateur sur le site
 function register(){
     $.ajax({
         type: "POST",
@@ -395,6 +396,7 @@ function register(){
     return false;
 };
 
+//fonction pour connecter un utilisateur sur le site
 function login(){
     $.ajax({
         type: "POST",
@@ -427,6 +429,7 @@ function login(){
     return false;
 };
 
+//fonction qui permet de deconnecter un utilisateur
 function disconnect(){
    
         
