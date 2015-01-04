@@ -417,8 +417,8 @@ class PlaylistController implements Controller
     
                 }
             }
-            $_SESSION["playlists"] = $temp;
         }
+        $_SESSION["playlists"] = array();
         
     }
 } 
