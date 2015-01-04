@@ -197,7 +197,7 @@ class User
      */
     public static function isWeakPassword($password)
     {
-        return strlen($password) > 8;
+        return strlen($password) < 8;
     }
 
     /**
