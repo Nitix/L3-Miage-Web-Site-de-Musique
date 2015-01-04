@@ -35,6 +35,9 @@ class PlaylistController implements Controller
         
     }
     
+    /**
+    *   charges les donnees de l'utilisateur (apres sa connexion) : ses playlists
+    */
     function loadUserData()
     {
         $user_id = $_SESSION["user"]->getId();
@@ -44,17 +47,21 @@ class PlaylistController implements Controller
             $_SESSION["playlists"] = array();
         }
         
+        //on recupere les playlists correspondant a l'utilisateur dans la base de donnees
         $playlists = Playlist::findByUserID($user_id);
         
+        //pour chaque playlist trouvee, on créé son tableau correspondant pour la session
         foreach($playlists as $plid => $pl)
         {
             $tmppl = array();
             $tmppl["playlist_id"] = $plid;
             $tmppl["playlist_name"] = $pl->getPlaylistName();
             
+            //on cherche les musiques appartenant a cette playlist
             $pltracks = PlaylistTrack::findByPlaylistIDWithTracks($plid);
             $tmppl["tracks"] = array();
             
+            //pour chaque musique trouvee on créé son tableau correspondant pour la session
             foreach($pltracks as $pltrid => $pltr)
             {
                 
@@ -70,11 +77,12 @@ class PlaylistController implements Controller
             }
             
             
-            
+            //on ajoute en session le tableau final des playlists
             $_SESSION["playlists"][] = $tmppl;
         }
     }
     
+    //retourne la liste des playlists actuellement en session
     function getPlaylists()
     {
         $array = array();
@@ -88,6 +96,7 @@ class PlaylistController implements Controller
         echo json_encode($array);
     }
     
+    //retourne une playlist et ses musiques selon l'ID fourni
     function getPlaylist()
     {
         $trouve = false;
@@ -116,6 +125,7 @@ class PlaylistController implements Controller
         }
     }
     
+    //ajoute une nouvelle playlist en session et en base
     function addPlaylist()
     {
         //si la liste des playlists n'existe pas, on la créé
@@ -202,16 +212,19 @@ class PlaylistController implements Controller
         
     }
     
+    //supprime une playlist de la session et en base
     function delPlaylist()
     {
 
         $tmp = array();
         $ok = true;
         
+        //on cherche la playlist dans la session
         foreach($_SESSION["playlists"] as $plnum => $pl)
         {
             if($pl["playlist_id"] == $_GET["id"])
             {
+                //si c'est elle, et que l'utilisateur est loggé, on la supprime en base
                 if(!User::getCurrentUser()->isVisitor())
                 {
                     $play = new Playlist();
@@ -234,13 +247,17 @@ class PlaylistController implements Controller
             }
             else
             {
+                //sinon, ce n'est pas elle, on ajoute alors la playlist a la liste temporaire
                 $tmp[] = $pl;
             }
         }
         
+        //on reinitialise la liste des playlists en session
         //unset($_SESSION["playlists"]);
         $_SESSION["playlists"] = array();
         
+        //et on la remplit a nouveau avec la liste temporaire. Cette methode la n'est pas optimisee mais permet d'avoir
+        //un tableau iterable une fois encodé en JSON et non un objet JSON avec des attributs.
         foreach($tmp as $plnum => $pl)
         {
             $_SESSION["playlists"][] = $pl;
@@ -249,11 +266,13 @@ class PlaylistController implements Controller
         echo json_encode($ok);
     }
     
+    //ajoute une musique a une playlist
     function addTrackToPlaylist()
     {
         $track_id = $_GET["trid"];
         $playlist_id = $_GET["plid"];
         
+        //on cherche la playlist dans la session
         foreach($_SESSION["playlists"] as $plnum => $pl)
         {
             if($pl["playlist_id"] == $playlist_id)
@@ -263,6 +282,7 @@ class PlaylistController implements Controller
                     $_SESSION["playlists"][$plnum]["tracks"] = array();
                 }
                 
+                //construit la musique sous forme de tableau
                 $track = array();
                 $track["track_id"] = $track_id;
                 $track["title"] = $_GET["trtitle"];
@@ -271,6 +291,7 @@ class PlaylistController implements Controller
                 $track["mp3_url"] = $_GET["trurl"];
                 $ok = true;
                 
+                //si l'utilisateur est loggé, on ajoute la musique a la playlist en base
                 if(!User::getCurrentUser()->isVisitor())
                 {
                     //ajoute la musique a la playlist en base
@@ -303,6 +324,7 @@ class PlaylistController implements Controller
         echo json_encode($ok);
     }
     
+    //supprime une musique d'une playlist dans la session et en base
     function delTrackFromPlaylist()
     {
         $position = $_GET["pos"];
@@ -315,7 +337,7 @@ class PlaylistController implements Controller
             //si c'est la bonne playlist,
             if($pl["playlist_id"] == $playlist_id)
             {
-                //si l'user est connecté, on sauvegarde la modif en base
+                //si l'user est connecté, on supprime la musique en base
                 if(!User::getCurrentUser()->isVisitor())
                 {
                     $pltr = new PlaylistTrack();
