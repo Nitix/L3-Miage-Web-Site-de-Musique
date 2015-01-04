@@ -14,6 +14,7 @@ class BaseController implements Controller
         'getArtistPage'
     );
 
+    //retourne des proposition de recherche pour des musiques et des artistes
     public function autocomplete()
     {
         try {
@@ -44,6 +45,7 @@ class BaseController implements Controller
         }
     }
 
+    //recherche les musiques selon leur titre et le nom de leur artiste, ainsi que des artistes selon leur nom, correspondant a la recherche
     public function recherche()
     {
 
@@ -76,6 +78,7 @@ class BaseController implements Controller
         echo json_encode($data);
     }
     
+    //retourne les donnees relative a la page d'un artiste (informations + musiques)
     public function getArtistPage()
     {
         $data = array();
